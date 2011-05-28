@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="demo" xmlns="http://jbpm.org/4.0/jpdl">
+   <start g="42,47,99,74">
+      <transition to="state1"/>
+   </start>
+   <state g="124,43,111,52" name="state1">
+      <transition to="end"/>
+   </state>
+   <end g="281,46,70,40" name="end"/>
+</process>

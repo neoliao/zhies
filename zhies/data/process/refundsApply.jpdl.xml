@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="refundsApply" xmlns="http://jbpm.org/4.0/jpdl">
+   <start name="start1" g="48,60,88,74">
+      <transition name="to 填写申请资料" to="填写申请资料" g="-89,-18"/>
+   </start>
+   <task name="填写申请资料" g="140,58,110,49">
+      <transition name="to 部门审批" to="部门审批" g="-65,-18"/>
+   </task>
+   <task name="局长审批" g="471,58,131,48">
+      <transition name="to end1" to="end1" g="-41,-18"/>
+   </task>
+   <task name="部门审批" g="312,60,115,47">
+      <transition name="to 局长审批" to="局长审批" g="-65,-18"/>
+   </task>
+   <end name="end1" g="648,60,86,44"/>
+</process>

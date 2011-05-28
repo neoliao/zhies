@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Functions>
+	<func name="Func" text="功能菜单" type="root">
+		<func name="Myhome" text="我的主页" icon="money" type="myhome">
+			<func name="NoticePortal" text="公告信息">
+				<privilege text="浏览" name="view"/>
+			</func>
+			<func name="LoginStat" text="登陆信息统计">
+				<privilege text="浏览" name="view"/>
+			</func> 
+		</func>
+		<func name="App" text="考勤功能" icon="money" type="category">
+			<func name="Notice" text="考勤信息增补">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Notice" text="班次管理">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Notice" text="班次浏览">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Notice" text="日历设置">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Notice" text="请假流程">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Notice" text="公告信息">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+		</func>
+		
+		<func name="Device" text="设备管理" icon="money" type="category">
+			<func name="DeviceMonitor" text="考勤机监控">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="DeviceManager" text="考勤机管理">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+		</func>
+		
+		<func name="Admin" text="系统设置" icon="settings" type="category">
+			<func name="Employee" text="员工管理" >
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Organization" text="组织机构" >
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>  
+			<func name="User" text="用户管理" >
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+				<privilege text="锁定" name="lock"/>				
+			</func>
+			<func name="Role" text="角色管理" >
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func> 
+			<func name="Dict" text="字典管理" >
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Config" text="系统参数" >
+				<privilege text="浏览" name="view"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Log" text="用户操作日志" >
+				<privilege text="浏览" name="view"/>
+			</func>
+		</func>
+		<func name="Extend" text="扩展功能" icon="pencil" type="category">
+			<func name="CodeGenerate" text="代码生成器" display="true">
+				<privilege text="浏览" name="view"/>
+			</func>
+		</func>		
+
+	</func>
+	
+</Functions>
