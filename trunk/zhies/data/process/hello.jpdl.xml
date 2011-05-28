@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="hello" xmlns="http://jbpm.org/4.0/jpdl">
+   <start g="152,63,48,48" name="start1">
+      <transition name="to family168" to="family168" g="-77,-17"/>
+   </start>
+   <state g="164,156,92,52" name="family168">
+      <transition g="-47,-17" name="to end1" to="end1"/>
+   </state>
+   <end g="185,268,48,48" name="end1"/>
+</process>
