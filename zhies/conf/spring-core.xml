@@ -16,7 +16,7 @@
 		
 	<bean id="defaultDs" destroy-method="close" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/fjdp"/>
+		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/zhies"/>
 		<property name="user" value="root"/>
 		<property name="password" value="fortunes"/>
 		<property name="maxIdleTime" value="1800"/>
