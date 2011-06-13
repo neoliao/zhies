@@ -75,10 +75,14 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		//新建角色
 		Role admin = new Role("系统管理员",Role.SYSTEM_ROLE);
 		Role typeMan = new Role("业务人员",Role.SYSTEM_ROLE);
-		Role feedReader = new Role("业务审批人员",Role.SYSTEM_ROLE);
+		Role opers = new Role("操作员",Role.SYSTEM_ROLE);
+		Role financials = new Role("财务人员",Role.SYSTEM_ROLE);
+		Role managers = new Role("总经理",Role.SYSTEM_ROLE);
 		roleService.add(admin);
 		roleService.add(typeMan);
-		roleService.add(feedReader);
+		roleService.add(financials);
+		roleService.add(opers);
+		roleService.add(managers);
 		
 		//关联角色和权限
 		admin.setPrivileges(pList);
@@ -101,14 +105,12 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		Organization root = new Organization(null,"组织root","");
 		organizationService.add(root);
 		
-		Organization deparment1 = new Organization(root,"维修资金管理中心","维修资金管理中心");
+		Organization deparment1 = new Organization(root,"销售部","销售部");
 		organizationService.add(deparment1);
 		
-		Organization deparment2 = new Organization(root,"莞城房管所","莞城房管所");
+		Organization deparment2 = new Organization(root,"财务部","财务部");
 		organizationService.add(deparment2);
 		
-		Organization deparment11 = new Organization(root,"东城房管所","东城房管所");
-		organizationService.add(deparment11);
 		return render(jo);
 	}
 	

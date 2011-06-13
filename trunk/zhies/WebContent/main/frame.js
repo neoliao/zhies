@@ -58,7 +58,8 @@ ConfigWin = Ext.extend(Ext.app.FormWindow,{
 			{xtype:'fieldset',title: '重设密码',autoHeight:true,
 				items :[
 					{xtype: 'f-text',fieldLabel: '密码',id:'pswd',name: 'password',inputType:'password',allowBlank: false},
-					{xtype:'f-text',fieldLabel:'确认密码',id:'pswdComfirm',name:'password2',inputType:'password',vtype: 'password',initialPassField: 'pswd',allowBlank: false}
+					{xtype:'f-text',fieldLabel:'确认密码',id:'pswdComfirm',name:'password2',inputType:'password',
+						vtype: 'password',initialPassField: 'pswd',allowBlank: false}
 				]
 			}
 		]

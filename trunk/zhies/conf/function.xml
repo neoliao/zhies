@@ -9,38 +9,20 @@
 				<privilege text="浏览" name="view"/>
 			</func> 
 		</func>
-		<func name="App" text="考勤功能" icon="money" type="category">
-			<func name="Notice" text="考勤信息增补">
+		<func name="App" text="进出口业务" icon="money" type="category">
+			<func name="Import" text="进口业务">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
 				<privilege text="修改" name="edit"/>
 			</func>
-			<func name="Notice" text="班次管理">
+			<func name="Export" text="出口业务">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
 				<privilege text="修改" name="edit"/>
 			</func>
-			<func name="Notice" text="班次浏览">
-				<privilege text="浏览" name="view"/>
-				<privilege text="增加" name="add"/>
-				<privilege text="删除" name="del"/>
-				<privilege text="修改" name="edit"/>
-			</func>
-			<func name="Notice" text="日历设置">
-				<privilege text="浏览" name="view"/>
-				<privilege text="增加" name="add"/>
-				<privilege text="删除" name="del"/>
-				<privilege text="修改" name="edit"/>
-			</func>
-			<func name="Notice" text="请假流程">
-				<privilege text="浏览" name="view"/>
-				<privilege text="增加" name="add"/>
-				<privilege text="删除" name="del"/>
-				<privilege text="修改" name="edit"/>
-			</func>
-			<func name="Notice" text="公告信息">
+			<func name="Commission" text="提成查询">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
@@ -48,14 +30,14 @@
 			</func>
 		</func>
 		
-		<func name="Device" text="设备管理" icon="money" type="category">
-			<func name="DeviceMonitor" text="考勤机监控">
+		<func name="Financial" text="设备管理" icon="money" type="category">
+			<func name="Accounts" text="应收应付">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
 				<privilege text="修改" name="edit"/>
 			</func>
-			<func name="DeviceManager" text="考勤机管理">
+			<func name="Invoice" text="发票管理">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
