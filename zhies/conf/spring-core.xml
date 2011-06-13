@@ -41,12 +41,13 @@
 		      <value>com.fortunes.fjdp.admin.model.Notice</value>
 		      <value>com.fortunes.fjdp.admin.model.Log</value>
 		      
-		      <!--
-		      <value type="resource">jbpm.repository.hbm.xml</value>
-		      <value type="resource">jbpm.execution.hbm.xml</value>
-		      <value type="resource">jbpm.history.hbm.xml</value>
-		      <value type="resource">jbpm.task.hbm.xml</value>
-		      -->
+		      <value>com.fortunes.zhies.model.Customer</value>
+		      <value>com.fortunes.zhies.model.CustomsBroker</value>
+		      <value>com.fortunes.zhies.model.Inspection</value>
+		      <value>com.fortunes.zhies.model.TruckCompany</value>
+		      <value>com.fortunes.zhies.model.ShipCompany</value>
+		      <value>com.fortunes.zhies.model.AirCompany</value>
+		      <value>com.fortunes.zhies.model.Business</value>
 		   </list>
 		 </property>
 		 

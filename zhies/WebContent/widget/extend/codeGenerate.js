@@ -90,7 +90,7 @@ CodeGenerate = Ext.extend(Ext.form.FormPanel,{
 		
 		Ext.apply(this,{
 			items: [
-				{xtype: 'f-text',fieldLabel: '包前缀',name: 'packagePrefix',value: 'com.fortunes.hmfms',allowBlank: false},
+				{xtype: 'f-text',fieldLabel: '包前缀',name: 'packagePrefix',value: 'com.fortunes.zhies',allowBlank: false},
 				{xtype: 'panel', border : false, cls : 'commentBox',
 					html: '包前缀　：com.fortunes.+项目名+.子模块名    例如com.fortunes.levws.info 如果是小项目，可以不分子模块,如 com.fortunes.levws'},
 				{xtype: 'f-text',fieldLabel: '模型名',name: 'modelName',allowBlank: false},

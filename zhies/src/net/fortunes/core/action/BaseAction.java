@@ -39,6 +39,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 	public static final String[] EXCLUDED_URL = {
 		"/system/login",
 		"/console/initDb",
+		"/codeGenerate/generate",
 		"/console/rebuildDb"
 	};
 	
