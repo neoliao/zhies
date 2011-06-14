@@ -46,10 +46,6 @@
 		<dict key="S" text="公共管理与社会组织"/>
 		<dict key="T" text="国际组织"/>
 	</dict>
-	<dict key="blogType" text="文章类型">
-		<dict key="01" text="原创"/>
-		<dict key="02" text="转帖"/>
-	</dict>
 	<dict key="position" text="职务">
 		<dict key="01" text="董事长"/>
 		<dict key="02" text="总经理"/>
@@ -66,11 +62,16 @@
 		<dict key="06" text="大专"/>
 		<dict key="07" text="高中"/>
 	</dict>
-	<dict key="peopleType" text="人员类型">
-		<dict key="01" text="访客"/>
-		<dict key="02" text="工人"/>
-		<dict key="03" text="员工"/>
-		<dict key="04" text="领导"/>
+	<dict key="unit" text="单位">
+		<dict key="01" text="KG"/>
+		<dict key="02" text="吨"/>
+		<dict key="03" text="箱"/>
+		<dict key="04" text="桶"/>
+	</dict>
+	
+	<dict key="currency" text="币种">
+		<dict key="01" text="USD"/>
+		<dict key="02" text="CNY"/>
 	</dict>
 	
 
