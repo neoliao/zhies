@@ -31,6 +31,10 @@ import com.fortunes.fjdp.admin.service.OrganizationService;
 import com.fortunes.fjdp.admin.service.PrivilegeService;
 import com.fortunes.fjdp.admin.service.RoleService;
 import com.fortunes.fjdp.admin.service.UserService;
+import com.fortunes.zhies.model.Business;
+import com.fortunes.zhies.model.Customer;
+import com.fortunes.zhies.service.BusinessService;
+import com.fortunes.zhies.service.CustomerService;
 
 @Component @Scope("prototype")
 public class ConsoleAction extends BaseAction implements ApplicationContextAware{
@@ -49,6 +53,8 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 	@Resource public DictService dictService;
 	@Resource public MenuService menuService;
 	@Resource public ConfigService configService;
+	@Resource public BusinessService businessService;
+	@Resource public CustomerService customerService;
 		
 	public String initDb() throws Exception{
 		AnnotationSessionFactoryBean annotationSessionFactoryBean = 
@@ -73,15 +79,15 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		List<Privilege> pList = privilegeService.findAll();	
 		
 		//新建角色
-		Role admin = new Role("系统管理员",Role.SYSTEM_ROLE);
-		Role typeMan = new Role("业务人员",Role.SYSTEM_ROLE);
-		Role opers = new Role("操作员",Role.SYSTEM_ROLE);
-		Role financials = new Role("财务人员",Role.SYSTEM_ROLE);
-		Role managers = new Role("总经理",Role.SYSTEM_ROLE);
+		Role admin = new Role("系统管理员","admin",Role.SYSTEM_ROLE);
+		Role sales = new Role("业务人员","sales",Role.SYSTEM_ROLE);
+		Role opers = new Role("操作员","operator",Role.SYSTEM_ROLE);
+		Role financials = new Role("财务人员","financials",Role.SYSTEM_ROLE);
+		Role managers = new Role("总经理","manager",Role.SYSTEM_ROLE);
 		roleService.add(admin);
-		roleService.add(typeMan);
-		roleService.add(financials);
+		roleService.add(sales);
 		roleService.add(opers);
+		roleService.add(financials);
 		roleService.add(managers);
 		
 		//关联角色和权限
@@ -110,6 +116,25 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		
 		Organization deparment2 = new Organization(root,"财务部","财务部");
 		organizationService.add(deparment2);
+		
+		//服务
+		Business A = new Business("A","报关服务");
+		Business B = new Business("B","单证制作");
+		Business C = new Business("C","产地证制作");
+		Business D = new Business("D","商检");
+		Business E = new Business("E","拖车运输");
+		Business F = new Business("F","国际运输");
+		businessService.add(A);
+		businessService.add(B);
+		businessService.add(C);
+		businessService.add(D);
+		businessService.add(E);
+		businessService.add(F);
+		
+		//customer
+		Customer c = new Customer();
+		c.setName("Crocs");
+		customerService.add(c);
 		
 		return render(jo);
 	}

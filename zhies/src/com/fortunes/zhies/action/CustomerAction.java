@@ -6,8 +6,12 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.fortunes.fjdp.AppHelper;
 import com.fortunes.fjdp.admin.AdminHelper;
+import com.fortunes.fjdp.admin.model.Employee;
+
 import net.fortunes.core.action.GenericAction;
 import net.fortunes.core.service.GenericService;
+import net.fortunes.util.PinYin;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import com.fortunes.zhies.model.Customer;
@@ -43,6 +47,24 @@ public class CustomerAction extends GenericAction<Customer> {
 		record.put("linkmanTel", e.getLinkmanTel());
 		record.put("linkmanEmail", e.getLinkmanEmail());
 		return record.getJsonObject();
+	}
+	
+	public String getCustomers() throws Exception{
+		List<Customer> list = getDefService().findAll();
+		JSONArray ja = new JSONArray();
+		for(Customer c:list){
+			String namePy = PinYin.toPinYinString(c.getName());
+			if(namePy.startsWith(getQuery().toUpperCase())
+					|| c.getName().startsWith(getQuery())){
+				JSONObject record = new JSONObject();
+				record.put("id", c.getId());
+				record.put("text", c.getName());
+				record.put("pinyin", namePy);
+				ja.add(record);
+			}	
+		}
+		jo.put(DATA_KEY, ja);
+		return render(jo); 
 	}
 	
 	

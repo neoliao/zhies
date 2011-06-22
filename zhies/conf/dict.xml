@@ -70,8 +70,18 @@
 	</dict>
 	
 	<dict key="currency" text="币种">
-		<dict key="01" text="USD"/>
-		<dict key="02" text="CNY"/>
+		<dict key="USD" text="USD"/>
+		<dict key="CNY" text="CNY"/>
+	</dict>
+	
+	<dict key="transportType" text="运输行式">
+		<dict key="01" text="散货"/>
+		<dict key="02" text="整柜"/>
+	</dict>
+	
+	<dict key="shipType" text="国际运输方式">
+		<dict key="01" text="海运"/>
+		<dict key="02" text="空运"/>
 	</dict>
 	
 

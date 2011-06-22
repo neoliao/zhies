@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import net.fortunes.core.Model;
 
 @Entity
-public class Customer extends Model{
+public class VerificationCompany extends Model{
 	
 	@Id @GeneratedValue
 	private long id;
@@ -33,10 +33,10 @@ public class Customer extends Model{
 	private String linkmanEmail;//联系人邮件
 	
 	
-    public Customer() {
+    public VerificationCompany() {
     }
     
-    public Customer(long id) {
+    public VerificationCompany(long id) {
     	this.id = id;
     }
     
@@ -62,69 +62,77 @@ public class Customer extends Model{
 	public String getName() {
 		return name;
 	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
 
-	public String getAddress() {
-		return address;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
-
-	public String getTel() {
-		return tel;
-	}
-	public void setFax(String fax) {
-		this.fax = fax;
-	}
-
-	public String getFax() {
-		return fax;
-	}
-	public void setQq(String qq) {
-		this.qq = qq;
-	}
-
-	public String getQq() {
-		return qq;
-	}
-	public void setLinkman(String linkman) {
-		this.linkman = linkman;
-	}
-
-	public String getLinkman() {
-		return linkman;
-	}
-	public void setLinkmanTel(String linkmanTel) {
-		this.linkmanTel = linkmanTel;
-	}
-
-	public String getLinkmanTel() {
-		return linkmanTel;
-	}
-	public void setLinkmanEmail(String linkmanEmail) {
-		this.linkmanEmail = linkmanEmail;
-	}
-
-	public String getLinkmanEmail() {
-		return linkmanEmail;
+	public String getCode() {
+		return code;
 	}
 
 	public void setCode(String code) {
 		this.code = code;
 	}
 
-	public String getCode() {
-		return code;
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String getQq() {
+		return qq;
+	}
+
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+
+	public String getLinkman() {
+		return linkman;
+	}
+
+	public void setLinkman(String linkman) {
+		this.linkman = linkman;
+	}
+
+	public String getLinkmanTel() {
+		return linkmanTel;
+	}
+
+	public void setLinkmanTel(String linkmanTel) {
+		this.linkmanTel = linkmanTel;
+	}
+
+	public String getLinkmanEmail() {
+		return linkmanEmail;
+	}
+
+	public void setLinkmanEmail(String linkmanEmail) {
+		this.linkmanEmail = linkmanEmail;
 	}
 
 }

@@ -13,16 +13,16 @@ import net.fortunes.util.PinYin;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.fortunes.zhies.model.CustomsBroker;
-import com.fortunes.zhies.model.Inspection;
-import com.fortunes.zhies.service.InspectionService;
+import com.fortunes.zhies.model.Customer;
+import com.fortunes.zhies.model.VerificationCompany;
+import com.fortunes.zhies.service.VerificationCompanyService;
 
 @Component @Scope("prototype")
-public class InspectionAction extends GenericAction<Inspection> {
+public class VerificationCompanyAction extends GenericAction<VerificationCompany> {
 	
-	private InspectionService inspectionService;
+	private VerificationCompanyService verificationCompanyService;
 	
-	protected void setEntity(Inspection e) throws ParseException{
+	protected void setEntity(VerificationCompany e) throws ParseException{
 		e.setName(p("name"));
 		e.setAddress(p("address"));
 		e.setEmail(p("email"));
@@ -34,7 +34,7 @@ public class InspectionAction extends GenericAction<Inspection> {
 		e.setLinkmanEmail(p("linkmanEmail"));
 	}
 	
-	protected JSONObject toJsonObject(Inspection e) throws ParseException{
+	protected JSONObject toJsonObject(VerificationCompany e) throws ParseException{
 		AdminHelper record = new AdminHelper();
 		record.put("id", e.getId());
 		record.put("name", e.getName());
@@ -49,11 +49,10 @@ public class InspectionAction extends GenericAction<Inspection> {
 		return record.getJsonObject();
 	}
 	
-	
-	public String getInspections() throws Exception{
-		List<Inspection> list = getDefService().findAll();
+	public String getVerificationCompanys() throws Exception{
+		List<VerificationCompany> list = getDefService().findAll();
 		JSONArray ja = new JSONArray();
-		for(Inspection c:list){
+		for(VerificationCompany c:list){
 			String namePy = PinYin.toPinYinString(c.getName());
 			if(namePy.startsWith(getQuery().toUpperCase())
 					|| c.getName().startsWith(getQuery())){
@@ -68,19 +67,20 @@ public class InspectionAction extends GenericAction<Inspection> {
 		return render(jo); 
 	}
 	
+	
 	/*=============== setter and getter =================*/
 	
 	@Override
-	public GenericService<Inspection> getDefService() {
-		return inspectionService;
+	public GenericService<VerificationCompany> getDefService() {
+		return verificationCompanyService;
 	}
 	
-	public void setInspectionService(InspectionService inspectionService) {
-		this.inspectionService = inspectionService;
+	public void setVerificationCompanyService(VerificationCompanyService verificationCompanyService) {
+		this.verificationCompanyService = verificationCompanyService;
 	}
 
-	public InspectionService getInspectionService() {
-		return inspectionService;
+	public VerificationCompanyService getVerificationCompanyService() {
+		return verificationCompanyService;
 	}
 
 }

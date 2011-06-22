@@ -3,6 +3,7 @@ package net.fortunes.core.action;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -320,6 +321,21 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 	public String p(String paramName){
 		String v = request.getParameter(paramName);
 		return v == null ? "" : v;
+	}
+	
+	public double pDouble(String paramName){
+		String v = request.getParameter(paramName);
+		return v == null ? 0 : Double.parseDouble(v);
+	}
+	
+	public int pInt(String paramName){
+		String v = request.getParameter(paramName);
+		return v == null ? 0 : Integer.parseInt(v);
+	}
+	
+	public Date pDate(String paramName){
+		String v = request.getParameter(paramName);
+		return v == null ? null : Tools.string2Date(v);
 	}
 	
 	private void setResponse(String contentType,boolean noCache){

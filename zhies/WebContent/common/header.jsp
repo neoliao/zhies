@@ -19,8 +19,8 @@
 		changed : '<s:property value="#session.authedUser.passwordChanged" escape="false" />',
 		privileges : '<s:property value="#session.privilegesString" escape="false" default="[]"/>',
 		roles : '<s:property value="#session.rolesString" escape="false" default="[]"/>',
-		ownRole : function(roleName){
-			return loginUser.roles.indexOf(roleName) >= 0;
+		ownRole : function(roleNameEn){
+			return loginUser.roles.indexOf(roleNameEn) >= 0;
 		},
 		ownPrivilege : function(privilegeCode){
 			return loginUser.privileges.indexOf(privilegeCode) >= 0;

@@ -16,25 +16,25 @@ import com.fortunes.fjdp.admin.model.Dict;
 import net.fortunes.core.Model;
 
 @Entity
-public class BusinessInstance extends Model{
+public class Invoice extends Model{
 	
 	@Id @GeneratedValue
 	private long id;
 	
-	@ManyToOne
-	private Business business;//服务种类
+	private String title;//发票抬头
 	
-	private double actualCost;
-	private double cost;
+	private double amount;//金额
 	
-	@ManyToOne
-	private Export export;
+	private String billNo;//发票号
+	
+	@Temporal(TemporalType.DATE)
+	private Date date;//日期
 	
 	
-    public BusinessInstance() {
+    public Invoice() {
     }
     
-    public BusinessInstance(long id) {
+    public Invoice(long id) {
     	this.id = id;
     }
     
@@ -52,39 +52,34 @@ public class BusinessInstance extends Model{
 	public long getId() {
 		return id;
 	}
-
-	public Business getBusiness() {
-		return business;
-	}
-
-	public void setBusiness(Business business) {
-		this.business = business;
-	}
-
-	public double getActualCost() {
-		return actualCost;
-	}
-
-	public void setActualCost(double actualCost) {
-		this.actualCost = actualCost;
-	}
-
-	public void setExport(Export export) {
-		this.export = export;
-	}
-
-	public Export getExport() {
-		return export;
-	}
-
-	public void setCost(double cost) {
-		this.cost = cost;
-	}
-
-	public double getCost() {
-		return cost;
-	}
 	
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
+	public String getTitle() {
+		return title;
+	}
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
+	}
+
+	public String getBillNo() {
+		return billNo;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Date getDate() {
+		return date;
+	}
 
 }

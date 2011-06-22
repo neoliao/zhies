@@ -18,4 +18,8 @@ public class RoleService extends GenericService<Role> {
 			role.getPrivileges().add(new Privilege(privilegeCode));
 		}
 	}
+
+	public Role getRoleByNameEn(String nameEn) {
+		return findUnique("from Role r where r.nameEn = ?", nameEn);
+	}
 }

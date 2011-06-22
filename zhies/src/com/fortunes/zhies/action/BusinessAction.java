@@ -21,7 +21,6 @@ public class BusinessAction extends GenericAction<Business> {
 	protected void setEntity(Business e) throws ParseException{
 		e.setCode(p("code"));
 		e.setName(p("name"));
-		e.setCost(p("cost"));
 	}
 	
 	protected JSONObject toJsonObject(Business e) throws ParseException{
@@ -29,7 +28,6 @@ public class BusinessAction extends GenericAction<Business> {
 		record.put("id", e.getId());
 		record.put("code", e.getCode());
 		record.put("name", e.getName());
-		record.put("cost", e.getCost());
 		return record.getJsonObject();
 	}
 	

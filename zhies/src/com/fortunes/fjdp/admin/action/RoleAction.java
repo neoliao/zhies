@@ -43,6 +43,22 @@ public class RoleAction extends GenericAction<Role> {
 		record.put("description", role.getDescription());
 		return record.getJsonObject();
 	}
+	
+	public String getUsers() throws Exception {
+		Role role = roleService.getRoleByNameEn(p("roleNameEn"));
+		List<User> users = role.getUsers();
+		JSONArray ja = new JSONArray();
+		for(User user:users){
+			JSONObject record = new JSONObject();
+			record.put("id", user.getId());
+			record.put("text", user.getDisplayName());
+			ja.add(record);
+		}
+		jo.put(DATA_KEY, ja);
+		return render(jo);
+	}
+
+
 
 	public String getRolesByUser() throws Exception {
 		User user = userService.get(getId());
