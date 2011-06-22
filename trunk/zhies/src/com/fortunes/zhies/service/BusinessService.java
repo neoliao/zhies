@@ -6,5 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BusinessService extends GenericService<Business> {
+
+	public Business getBusinessByCoce(String code) {
+		return findUnique("from Business b where b.code = ?", code);
+	}
 	
 }

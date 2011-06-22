@@ -48,6 +48,13 @@
 		      <value>com.fortunes.zhies.model.ShipCompany</value>
 		      <value>com.fortunes.zhies.model.AirCompany</value>
 		      <value>com.fortunes.zhies.model.Business</value>
+		      
+		      <value>com.fortunes.zhies.model.Export</value>
+		      <value>com.fortunes.zhies.model.Item</value>
+		      <value>com.fortunes.zhies.model.BusinessInstance</value>
+		      <value>com.fortunes.zhies.model.Invoice</value>
+		      
+		      <value>com.fortunes.zhies.model.VerificationCompany</value>
 		   </list>
 		 </property>
 		 

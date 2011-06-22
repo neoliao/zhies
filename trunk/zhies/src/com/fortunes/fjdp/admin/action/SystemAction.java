@@ -147,7 +147,7 @@ public class SystemAction extends BaseAction {
 		Role role = user.getRole();
 		JSONArray ja = new JSONArray();
 		if(role != null){
-			ja.add(role.getName());
+			ja.add(role.getNameEn());
 		}
 		return ja;
 	}

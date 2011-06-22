@@ -27,6 +27,9 @@ public class Role extends Model implements Group{
 	@Column(nullable=false, unique=true)
 	private String name;
 	
+	@Column(nullable=false, unique=true)
+	private String nameEn;
+	
 	private String roleType;
 	
 	@OneToMany(mappedBy = "role")
@@ -44,8 +47,9 @@ public class Role extends Model implements Group{
     	this.dbId = dbId;
     }
     
-    public Role(String name,String roleType) {
+    public Role(String name,String nameEn,String roleType) {
     	this.name = name;
+    	this.nameEn = nameEn;
     	this.roleType = roleType;
     }  
     
@@ -113,5 +117,13 @@ public class Role extends Model implements Group{
 
 	public void setDbId(long dbId) {
 		this.dbId = dbId;
+	}
+
+	public void setNameEn(String nameEn) {
+		this.nameEn = nameEn;
+	}
+
+	public String getNameEn() {
+		return nameEn;
 	}		
 }

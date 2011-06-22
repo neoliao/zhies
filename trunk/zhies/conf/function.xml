@@ -58,6 +58,12 @@
 				<privilege text="删除" name="del"/>
 				<privilege text="修改" name="edit"/>
 			</func>
+			<func name="VerificationCompany" text="核销单公司">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
 			<func name="CustomsBroker" text="报关行">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>

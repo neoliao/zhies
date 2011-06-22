@@ -73,8 +73,9 @@ Ext.app.BaseFuncPanel = Ext.extend(Ext.grid.GridPanel, {
 				
 		this.store.on('load',function(store,records,options){
 			if(this.store.getTotalCount() > 0){
-				this.getTopToolbar().setDisabled(false);
+				
 				if(!this.getSelectionModel().hasSelection()){
+					this.getTopToolbar().setDisabled(false);
 					//当是以按"上一条"方式翻页时选中最后一条
 					if(this.stepPrevious){
 						this.getSelectionModel().selectLastRow();
