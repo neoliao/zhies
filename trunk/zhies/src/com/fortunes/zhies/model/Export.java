@@ -1,40 +1,19 @@
 package com.fortunes.zhies.model;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import net.fortunes.core.Model;
+
 import com.fortunes.fjdp.admin.model.Dict;
-import com.fortunes.fjdp.admin.model.User;
 
 @Entity
-public class Export extends Model{
+public class Export extends Trade{
 	
-	public enum Status{
-		CREATED,
-		SUBMITED,
-		ASSIGNED,
-		FINISHED
-	}
 	
-	@Id @GeneratedValue
-	private long id;
-	
-	private String code;
-	
-	@Temporal(TemporalType.DATE)
-	private Date createDate;//创建日期
-	
+	//for CustomsBroker 报关
 	@ManyToOne
 	private Dict currency;
 	
@@ -50,28 +29,7 @@ public class Export extends Model{
 	@ManyToOne
 	private VerificationCompany verificationCompany;//核销单公司
 	
-	@ManyToOne
-	private User sales;//销售业务员
 	
-	@ManyToOne
-	private User operator;//操作员
-	
-	@Enumerated(EnumType.STRING)
-	private Status status;//业务状态
-	
-	@ManyToOne
-	private User currentOperator;//当前处理人
-	
-	@ManyToOne
-	private Customer customer;//客户
-	
-	@OneToMany(mappedBy = "export",cascade  = CascadeType.REMOVE)
-	private List<Item> items;//货物
-	
-	@OneToMany(mappedBy = "export",cascade  = CascadeType.REMOVE)
-	private List<BusinessInstance> businessInstances;//包含的服务
-	
-	//for CustomsBroker 报关
 	@ManyToOne
 	private CustomsBroker customsBroker;
 	
@@ -96,6 +54,26 @@ public class Export extends Model{
 	private Date invoiceDate;//发票日期
 	
 	private String tradeType;//成交方式
+	
+	private String curencyType;//结汇方式
+	
+	private String signCity;
+	
+	private String payCondition;
+	
+	private String memos;
+	
+	private String taxMemos;
+	
+	private String itemsCity;
+	
+	//for 存仓
+	
+	private String storagePeriod;
+	
+	private String storageVehicle;
+	
+	private String packageAndModel;
 	
 	private double grossWeight;//毛重KG
 	
@@ -140,13 +118,12 @@ public class Export extends Model{
 	@ManyToOne
 	private Dict shipType;//国际运输方式,海运,空运 
 	
-	private String destinitionPort;//目的港
-	
 	private double volume;//体积
 	
 	private double weight;//重量
 	
 	private String ladingBillNo;//提单号
+	
 	
 	@ManyToOne
 	private ShipCompany shipCompany;
@@ -159,7 +136,7 @@ public class Export extends Model{
     }
     
     public Export(long id) {
-    	this.id = id;
+    	setId(id);
     }
     
     @Override
@@ -169,69 +146,6 @@ public class Export extends Model{
     
     /*=============== setter and getter =================*/
     
-    public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getId() {
-		return id;
-	}
-	
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public User getSales() {
-		return sales;
-	}
-
-	public void setSales(User sales) {
-		this.sales = sales;
-	}
-
-	public User getOperator() {
-		return operator;
-	}
-
-	public void setOperator(User operator) {
-		this.operator = operator;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
-	public User getCurrentOperator() {
-		return currentOperator;
-	}
-
-	public void setCurrentOperator(User currentOperator) {
-		this.currentOperator = currentOperator;
-	}
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public List<Item> getItems() {
-		return items;
-	}
-
-	public void setItems(List<Item> items) {
-		this.items = items;
-	}
 
 	public CustomsBroker getCustomsBroker() {
 		return customsBroker;
@@ -433,15 +347,6 @@ public class Export extends Model{
 		this.shipType = shipType;
 	}
 
-
-	public String getDestinitionPort() {
-		return destinitionPort;
-	}
-
-	public void setDestinitionPort(String destinitionPort) {
-		this.destinitionPort = destinitionPort;
-	}
-
 	public double getVolume() {
 		return volume;
 	}
@@ -482,21 +387,6 @@ public class Export extends Model{
 		this.airCompany = airCompany;
 	}
 
-	public void setBusinessInstances(List<BusinessInstance> businessInstances) {
-		this.businessInstances = businessInstances;
-	}
-
-	public List<BusinessInstance> getBusinessInstances() {
-		return businessInstances;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getCode() {
-		return code;
-	}
 
 	public void setInspectionTransType(String inspectionTransType) {
 		this.inspectionTransType = inspectionTransType;
@@ -568,6 +458,78 @@ public class Export extends Model{
 
 	public Dict getCurrency() {
 		return currency;
+	}
+
+	public String getSignCity() {
+		return signCity;
+	}
+
+	public void setSignCity(String signCity) {
+		this.signCity = signCity;
+	}
+
+	public String getPayCondition() {
+		return payCondition;
+	}
+
+	public void setPayCondition(String payCondition) {
+		this.payCondition = payCondition;
+	}
+
+	public String getMemos() {
+		return memos;
+	}
+
+	public void setMemos(String memos) {
+		this.memos = memos;
+	}
+
+	public String getTaxMemos() {
+		return taxMemos;
+	}
+
+	public void setTaxMemos(String taxMemos) {
+		this.taxMemos = taxMemos;
+	}
+
+	public String getItemsCity() {
+		return itemsCity;
+	}
+
+	public void setItemsCity(String itemsCity) {
+		this.itemsCity = itemsCity;
+	}
+
+	public String getStoragePeriod() {
+		return storagePeriod;
+	}
+
+	public void setStoragePeriod(String storagePeriod) {
+		this.storagePeriod = storagePeriod;
+	}
+
+	public String getStorageVehicle() {
+		return storageVehicle;
+	}
+
+	public void setStorageVehicle(String storageVehicle) {
+		this.storageVehicle = storageVehicle;
+	}
+
+	public void setPackageAndModel(String packageAndModel) {
+		this.packageAndModel = packageAndModel;
+	}
+
+	public String getPackageAndModel() {
+		return packageAndModel;
+	}
+
+	public void setCurencyType(String curencyType) {
+		this.curencyType = curencyType;
+	}
+
+	public String getCurencyType() {
+		return curencyType;
 	}
 
 }

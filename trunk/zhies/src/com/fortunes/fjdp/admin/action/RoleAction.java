@@ -68,7 +68,7 @@ public class RoleAction extends GenericAction<Role> {
 			JSONObject record = new JSONObject();
 			record.put("id", role.getDbId());
 			record.put("text", role.getName());
-			record.put("checked",user == null?false : (user.getRole()==null?false:(user.getRole().getId()==role.getId())));
+			record.put("checked",user == null ? false : user.getRoles().contains(role));
 			ja.add(record);
 		}
 		jo.put("data", ja);

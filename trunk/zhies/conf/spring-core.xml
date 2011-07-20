@@ -41,20 +41,26 @@
 		      <value>com.fortunes.fjdp.admin.model.Notice</value>
 		      <value>com.fortunes.fjdp.admin.model.Log</value>
 		      
+		      <value>com.fortunes.zhies.model.Company</value>
 		      <value>com.fortunes.zhies.model.Customer</value>
+		      <value>com.fortunes.zhies.model.Buyer</value>
 		      <value>com.fortunes.zhies.model.CustomsBroker</value>
 		      <value>com.fortunes.zhies.model.Inspection</value>
 		      <value>com.fortunes.zhies.model.TruckCompany</value>
 		      <value>com.fortunes.zhies.model.ShipCompany</value>
 		      <value>com.fortunes.zhies.model.AirCompany</value>
-		      <value>com.fortunes.zhies.model.Business</value>
+		      <value>com.fortunes.zhies.model.VerificationCompany</value>
 		      
+		     
+		      <value>com.fortunes.zhies.model.Trade</value>
 		      <value>com.fortunes.zhies.model.Export</value>
 		      <value>com.fortunes.zhies.model.Item</value>
+		      <value>com.fortunes.zhies.model.Business</value>
 		      <value>com.fortunes.zhies.model.BusinessInstance</value>
 		      <value>com.fortunes.zhies.model.Invoice</value>
+		      <value>com.fortunes.zhies.model.Accounts</value>
 		      
-		      <value>com.fortunes.zhies.model.VerificationCompany</value>
+		      
 		   </list>
 		 </property>
 		 

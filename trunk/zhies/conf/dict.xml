@@ -84,6 +84,11 @@
 		<dict key="02" text="空运"/>
 	</dict>
 	
+	<dict key="bankAccount" text="银行账号">
+		<dict key="01" text="建行"/>
+		<dict key="02" text="工行"/>
+	</dict>
+	
 
 	
 </dicts>

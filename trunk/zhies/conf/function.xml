@@ -14,19 +14,31 @@
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
-				<privilege text="修改" name="edit"/>
+				<privilege text="业务提交" name="submit"/>
+				<privilege text="分配操作员" name="assign"/>
+				<privilege text="操作" name="operator"/>
+				<privilege text="操作提交" name="operator_submit"/>
+				<privilege text="应收应付提交" name="accounts_submit"/>
+				<privilege text="导出单证" name="export_file"/>
 			</func>
 			<func name="Export" text="出口业务">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
 				<privilege text="修改" name="edit"/>
+				<privilege text="业务提交" name="submit"/>
+				<privilege text="分配操作员" name="assign"/>
+				<privilege text="操作" name="operator"/>
+				<privilege text="操作提交" name="operator_submit"/>
+				<privilege text="应收应付提交" name="accounts_submit"/>
+				<privilege text="导出单证" name="export_file"/>
 			</func>
 			<func name="Commission" text="提成查询">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>
 				<privilege text="修改" name="edit"/>
+				<privilege text="查看某个员工" name="view_all"/>
 			</func>
 		</func>
 		
@@ -53,6 +65,12 @@
 		
 		<func name="Info" text="基础数据管理" icon="pencil" type="category">
 			<func name="Customer" text="客户管理">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
+			<func name="Buyer" text="买方管理">
 				<privilege text="浏览" name="view"/>
 				<privilege text="增加" name="add"/>
 				<privilege text="删除" name="del"/>

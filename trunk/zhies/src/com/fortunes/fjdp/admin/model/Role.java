@@ -32,7 +32,7 @@ public class Role extends Model implements Group{
 	
 	private String roleType;
 	
-	@OneToMany(mappedBy = "role")
+	@ManyToMany(mappedBy = "roles")
 	private List<User> users = new ArrayList<User>();
 	
 	@ManyToMany

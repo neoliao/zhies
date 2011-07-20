@@ -6,8 +6,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
@@ -77,6 +80,32 @@ public class Tools {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		return df.format(date);
 
+	}
+	
+	public static Date getFirstDate(String monthTag){
+		try {
+			DateFormat df = new SimpleDateFormat("yyyy-M-dd");
+			return df.parse(monthTag+"-01");
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	public static Date getLastDate(String monthTag){
+		try {
+			DateFormat df = new SimpleDateFormat("yyyy-M-dd");
+			Date firstDate = df.parse(monthTag+"-01");
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(firstDate);
+			int lastDateInt = cal.getActualMaximum(Calendar.DATE);
+			Date lastDate = df.parse(monthTag+"-"+lastDateInt);
+			return lastDate;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**

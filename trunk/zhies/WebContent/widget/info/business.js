@@ -16,14 +16,8 @@ Business = Ext.extend(Ext.app.BaseFuncPanel,{
 			winConfig : {
 				height: 330
 			},
-			formConfig:{
-				items: [
-					{xtype: 'f-text',fieldLabel: '服务代码',name: 'code'},
-					{xtype: 'f-text',fieldLabel: '服务名称',name: 'name'},
-					{xtype: 'f-text',fieldLabel: '成本价格',name: 'cost'}
- 
-				]
-			},
+			buttonConfig :[
+			],
 			url:ctx+'/business'	
 		});
 		Business.superclass.initComponent.call(this);

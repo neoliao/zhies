@@ -1,18 +1,10 @@
 package com.fortunes.zhies.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import com.fortunes.fjdp.admin.model.Dict;
+
 import net.fortunes.core.Model;
 
 @Entity
@@ -25,6 +17,7 @@ public class BusinessInstance extends Model{
 	private Business business;//服务种类
 	
 	private double actualCost;
+	private double salesPrice;
 	private double cost;
 	
 	@ManyToOne
@@ -83,6 +76,14 @@ public class BusinessInstance extends Model{
 
 	public double getCost() {
 		return cost;
+	}
+
+	public void setSalesPrice(double salesPrice) {
+		this.salesPrice = salesPrice;
+	}
+
+	public double getSalesPrice() {
+		return salesPrice;
 	}
 	
 

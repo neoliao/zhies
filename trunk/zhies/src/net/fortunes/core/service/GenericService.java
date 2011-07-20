@@ -19,6 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.fortunes.zhies.model.Export;
+
 
 /**
  * 一个泛型Service,针对一个Entity提供一系列模板方法．
@@ -173,7 +175,7 @@ public abstract class GenericService<E>{
 		return getListData(getConditions(null,null),0,0);
 	}
 	
-	protected HibernateTemplate getHt(){
+	public HibernateTemplate getHt(){
 		return hibernateTemplate;
 	}
 
@@ -184,5 +186,6 @@ public abstract class GenericService<E>{
 	public void setEntityClass(Class<E> entityClass) {
 		this.entityClass = entityClass;
 	}
+
 
 }

@@ -31,10 +31,24 @@ import com.fortunes.fjdp.admin.service.OrganizationService;
 import com.fortunes.fjdp.admin.service.PrivilegeService;
 import com.fortunes.fjdp.admin.service.RoleService;
 import com.fortunes.fjdp.admin.service.UserService;
+import com.fortunes.zhies.model.AirCompany;
 import com.fortunes.zhies.model.Business;
+import com.fortunes.zhies.model.Buyer;
 import com.fortunes.zhies.model.Customer;
+import com.fortunes.zhies.model.CustomsBroker;
+import com.fortunes.zhies.model.Inspection;
+import com.fortunes.zhies.model.ShipCompany;
+import com.fortunes.zhies.model.TruckCompany;
+import com.fortunes.zhies.model.VerificationCompany;
+import com.fortunes.zhies.service.AirCompanyService;
 import com.fortunes.zhies.service.BusinessService;
+import com.fortunes.zhies.service.BuyerService;
 import com.fortunes.zhies.service.CustomerService;
+import com.fortunes.zhies.service.CustomsBrokerService;
+import com.fortunes.zhies.service.InspectionService;
+import com.fortunes.zhies.service.ShipCompanyService;
+import com.fortunes.zhies.service.TruckCompanyService;
+import com.fortunes.zhies.service.VerificationCompanyService;
 
 @Component @Scope("prototype")
 public class ConsoleAction extends BaseAction implements ApplicationContextAware{
@@ -55,7 +69,14 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 	@Resource public ConfigService configService;
 	@Resource public BusinessService businessService;
 	@Resource public CustomerService customerService;
-		
+	@Resource public CustomsBrokerService customsBrokerService;
+	@Resource public TruckCompanyService truckCompanyService;
+	@Resource public InspectionService inspectionService;
+	@Resource public VerificationCompanyService verificationCompanyService;
+	@Resource public ShipCompanyService shipCompanyService;
+	@Resource public AirCompanyService airCompanyService;
+	@Resource public BuyerService buyerService;
+	
 	public String initDb() throws Exception{
 		AnnotationSessionFactoryBean annotationSessionFactoryBean = 
 			(AnnotationSessionFactoryBean)applicationContext.getBean("&sessionFactory");
@@ -94,7 +115,7 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		admin.setPrivileges(pList);
 	
 		//新建员工
-		Employee adminEmployee = new Employee("00","超级管理员");
+		Employee adminEmployee = new Employee("001","谭生");
 		employeeService.add(adminEmployee);
 		
 		//新建用户 
@@ -103,7 +124,7 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		//关联用户和角色,用户和员工
 		adminUser.setEmployee(adminEmployee);
 		
-		adminUser.setRole(admin);
+		adminUser.getRoles().add(admin);
 		
 		userService.add(adminUser);
 		
@@ -133,8 +154,40 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		
 		//customer
 		Customer c = new Customer();
-		c.setName("Crocs");
+		c.setName("天汇国际");
+		c.setCode("TH");
 		customerService.add(c);
+		
+		Buyer b = new Buyer();
+		b.setName("Crocs");
+		b.setCode("CRS");
+		b.setAddress("Road 1223,Mexico city,Mexico");
+		b.setCustomer(c);
+		buyerService.add(b);
+		
+		CustomsBroker cb = new CustomsBroker();
+		cb.setName("罗湖报关行");
+		customsBrokerService.add(cb);
+		
+		Inspection cb2 = new Inspection();
+		cb2.setName("万唐商检公司");
+		inspectionService.add(cb2);
+		
+		TruckCompany cb3 = new TruckCompany();
+		cb3.setName("长平运输公司");
+		truckCompanyService.add(cb3);
+		
+		ShipCompany cb4 = new ShipCompany();
+		cb4.setName("海星货运");
+		shipCompanyService.add(cb4);
+		
+		AirCompany cb5 = new AirCompany();
+		cb5.setName("深圳申能运输");
+		airCompanyService.add(cb5);
+		
+		VerificationCompany cb6 = new VerificationCompany();
+		cb6.setName("中惠进出口");
+		verificationCompanyService.add(cb6);
 		
 		return render(jo);
 	}

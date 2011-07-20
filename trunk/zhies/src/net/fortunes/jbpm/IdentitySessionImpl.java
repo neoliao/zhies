@@ -49,8 +49,7 @@ public class IdentitySessionImpl implements IdentitySession {
 	 */
 	@Override
 	public void createMembership(String userId, String groupId, String role) {
-		com.fortunes.fjdp.admin.model.User user = userService.get(userId);
-		user.setRole(new Role(Long.parseLong(groupId)));
+
 	}
 	
 	/** 
@@ -90,8 +89,7 @@ public class IdentitySessionImpl implements IdentitySession {
 	 */
 	@Override
 	public void deleteMembership(String userId, String groupId, String role) {
-		com.fortunes.fjdp.admin.model.User user = userService.get(userId);
-		user.setRole(roleService.get(groupId));
+
 	}
 	
 	/** 
@@ -119,13 +117,7 @@ public class IdentitySessionImpl implements IdentitySession {
 	 */
 	@Override
 	public List<Group> findGroupsByUser(String userId) {
-		List<Group> jbpmGroups = new ArrayList<Group>();
-		com.fortunes.fjdp.admin.model.Role role = userService.get(userId).getRole();
-//		for(com.fortunes.fjdp.admin.model.Role role : roles){
-//			jbpmGroups.add((Group)role);
-//		}
-		jbpmGroups.add((Group)role);
-		return jbpmGroups;
+		return null;
 	}
 
 	@Override

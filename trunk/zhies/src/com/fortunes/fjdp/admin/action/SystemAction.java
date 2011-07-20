@@ -144,9 +144,9 @@ public class SystemAction extends BaseAction {
 	}
 	
 	private JSONArray getRolesArray(User user){
-		Role role = user.getRole();
+		List<Role> roles = user.getRoles();
 		JSONArray ja = new JSONArray();
-		if(role != null){
+		for(Role role : roles){
 			ja.add(role.getNameEn());
 		}
 		return ja;
