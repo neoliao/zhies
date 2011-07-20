@@ -1,5 +1,6 @@
 
 Ext.BLANK_IMAGE_URL = ctx+'/struts/resources/images/default/s.gif'; 
+Ext.chart.Chart.CHART_URL = ctx+'/struts/resources/charts.swf';
 
 var urlPostPrefix = '';
 
@@ -110,7 +111,8 @@ Ext.apply(Ext.form.VTypes, {
 Ext.apply(Ext.layout.FormLayout.prototype, {
 	 renderItem : function(c, position, target){
 	 	if(c && (c.isFormField || c.fieldLabel) && c.inputType != 'hidden'){
-	 		if(c.allowBlank==false){
+	 		
+	 		if(c.allowBlank == false){
                 c.fieldLabel = "<span style=\"color:red;font-weight:bold;\" ext:qtip=\"该字段不能为空\"> * </span>"+c.fieldLabel;
             }
             var args = this.getTemplateArgs(c);
@@ -123,8 +125,8 @@ Ext.apply(Ext.layout.FormLayout.prototype, {
                 c.itemCt = this.fieldTpl.append(target, args, true);
             }
             if(!c.getItemCt){
-                // Non form fields don't have getItemCt, apply it here
-                // This will get cleaned up in onRemove
+                
+                
                 Ext.apply(c, {
                     getItemCt: function(){
                         return c.itemCt;
@@ -152,6 +154,7 @@ Ext.apply(Ext.layout.FormLayout.prototype, {
         }else {
             Ext.layout.FormLayout.superclass.renderItem.apply(this, arguments);
         }
+	 	
     }
 }); 
 

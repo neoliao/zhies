@@ -18,7 +18,7 @@
 		userName : '<s:property value="#session.authedUser.displayName" escape="false"/>',
 		changed : '<s:property value="#session.authedUser.passwordChanged" escape="false" />',
 		privileges : '<s:property value="#session.privilegesString" escape="false" default="[]"/>',
-		roles : '<s:property value="#session.rolesString" escape="false" default="[]"/>',
+		roles : <s:property value="#session.rolesString" escape="false" default="[]"/>,
 		ownRole : function(roleNameEn){
 			return loginUser.roles.indexOf(roleNameEn) >= 0;
 		},
@@ -32,4 +32,3 @@
 <script type="text/javascript" src="<s:url value="/include/js/ext-extends.js"/>"></script>
 <script type="text/javascript" src="<s:url value="/include/js/fjdp-all.js"/>"></script>
 <script type="text/javascript" src="<s:url value="/widget/app-all.js"/>"></script>
-<script type="text/javascript" src="'<%=request.getContextPath()%>'/include/js/swfobject.js"></script>

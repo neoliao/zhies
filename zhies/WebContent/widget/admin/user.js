@@ -32,11 +32,11 @@ User = Ext.extend(Ext.app.BaseFuncPanel,{
 				}		
 			}
 			return re.join(',');
-		}
+		};
 		
 		var lockedRender = function(v){		
 			return v == true ?'<span style="color:red">已锁定</span>' : '';
-		}
+		};
 		Ext.apply(this,{
 			url:ctx+'/user',
 			gridConfig: {
@@ -46,11 +46,11 @@ User = Ext.extend(Ext.app.BaseFuncPanel,{
 					{header: '用户显示名',dataIndex:'userDisplayName',sortable:true},
 					{header: '对应员工',dataIndex:'employee',renderer : dictRenderer},
 					{header: '最后登陆时间',dataIndex:'lastLoginTime',width:150},
-					{header: '所属角色',dataIndex:'role',renderer:dictRenderer,width:200},
+					{header: '所属角色',dataIndex:'roles',renderer:rolesRender,width:200},
 					{header: '锁定',dataIndex:'locked',renderer:lockedRender}
 				]),	
 				storeMapping:[
-					'id','userName','userDisplayName','employee','lastLoginTime','role','locked'
+					'id','userName','userDisplayName','employee','lastLoginTime','roles','locked'
 				]
 			},
 			winConfig : {
@@ -84,9 +84,7 @@ User = Ext.extend(Ext.app.BaseFuncPanel,{
 					},
 					{xtype:'fieldset',title: '选择用户角色',autoHeight:true,
 						items :[
-//							{xtype:'f-roleByUser',fieldLabel: '用户角色',hiddenName:'role',emptyText: '请选择一个用户角色',allowBlank: false}			
-							{xtype: 'f-select',dataUrl:'/role/getRoles',storeFields:['id','text'],allowBlank: false,
-								fieldLabel: '用户角色',hiddenName: 'role',id:'roleSelect',listeners : {}}
+							{xtype:'f-roleByUser',fieldLabel: '用户角色',hiddenName:'roles',emptyText: '请选择一个用户角色',allowBlank: false}			
 						]
 					}
 				]
@@ -95,14 +93,14 @@ User = Ext.extend(Ext.app.BaseFuncPanel,{
 				text:'锁定',
 				iconCls:'lock',
 				id:'lockUserBt',
-				prililegeCode:this.funcCode+'_lock',
+				privilegeCode:this.funcCode+'_lock',
 				scope:this,
 				handler:this.lockUser
 			},{
 				text:'解锁',
 				iconCls:'key',
 				id:'unlockUserBt',
-				prililegeCode:this.funcCode+'_lock',
+				privilegeCode:this.funcCode+'_lock',
 				scope:this,
 				handler:this.lockUser,
 				hidden:true

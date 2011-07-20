@@ -12,12 +12,15 @@ import net.fortunes.core.Helper;
 import net.fortunes.util.Tools;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fortunes.fjdp.admin.model.Dict;
 import com.fortunes.fjdp.admin.model.User;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
@@ -325,17 +328,22 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 	
 	public double pDouble(String paramName){
 		String v = request.getParameter(paramName);
-		return v == null ? 0 : Double.parseDouble(v);
+		return StringUtils.isEmpty(v) ? 0 : Double.parseDouble(v);
 	}
 	
 	public int pInt(String paramName){
 		String v = request.getParameter(paramName);
-		return v == null ? 0 : Integer.parseInt(v);
+		return StringUtils.isEmpty(v) ? 0 : Integer.parseInt(v);
 	}
 	
 	public Date pDate(String paramName){
 		String v = request.getParameter(paramName);
-		return v == null ? null : Tools.string2Date(v);
+		return StringUtils.isEmpty(v) ? null : Tools.string2Date(v);
+	}
+	
+	public Dict pDict(String paramName){
+		String v = request.getParameter(paramName);
+		return StringUtils.isEmpty(v) ? null : new Dict(v);
 	}
 	
 	private void setResponse(String contentType,boolean noCache){

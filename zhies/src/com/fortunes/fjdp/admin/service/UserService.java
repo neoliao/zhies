@@ -93,21 +93,18 @@ public class UserService extends GenericService<User>{
 	
 	@SuppressWarnings("unchecked")
 	public User authUser(User user){
-		List<User> userList = this.find(
+		return this.findUnique(
 				"from User as u where u.name = ? and u.password = ? and locked = ?", 
 				user.getName(),user.getPassword(),false);
-		if(userList.size() == 1){
-			return userList.get(0);
-		}else{
-			return null;
-		}
 	}
 	
 	public List<Privilege> getPrivileges(User authedUser){
 		List<Privilege> userPrivileges = new ArrayList<Privilege>();
-		Role role = authedUser.getRole();
-		for(Privilege p:role.getPrivileges()){
-			userPrivileges.add(p);
+		List<Role> roles = authedUser.getRoles();
+		for(Role role : roles){
+			for(Privilege p:role.getPrivileges()){
+				userPrivileges.add(p);
+			}
 		}
 		return userPrivileges;
 	}
@@ -116,7 +113,17 @@ public class UserService extends GenericService<User>{
 	public List<User> getUsersByPrivilegeCode(String privilegeCode){
 		return this.find(
 				"select u from User as u join u.roles as r join r.privileges as p" +
-				" where p.code = '"+privilegeCode+"'");
+				" where p.code = ?",privilegeCode);
+	}
+	
+	public boolean ownRole(User user,String roleString){
+		List<Role> roles = user.getRoles();
+		for(Role role : roles){
+			if(role.getNameEn().equals(roleString)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static Map<String, Integer> getUserLoginStatus() {

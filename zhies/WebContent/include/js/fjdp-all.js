@@ -218,7 +218,7 @@ Ext.app.BaseFuncPanel = Ext.extend(Ext.grid.GridPanel, {
 		});
 		
 		var formConf = Ext.apply({},this.formConfig||{},{
-			buttons : this.getWinButtons(this.winConfig.buttons)
+			buttons : this.getWinButtons(this.formConfig.buttonConfigs)
 		});
 		
 		this.win = new Ext.app.FormWindow({
@@ -357,9 +357,9 @@ Ext.app.BaseFuncPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.showWin();
 		this.ajaxParams['id'] = this.selectedId;
 		if(this.loadFromGrid){
-			var record = this.store.getById(this.selectedId)
+			var record = this.store.getById(this.selectedId);
 			this.win.formPanel.getForm().loadRecord(record);
-			this.fireEvent('afterload',this.win);	
+			this.fireEvent('afterload',this.win,record);	
 		}else{
 			this.win.formPanel.getForm().load({
 				url:this.url+'/edit' + urlPostPrefix,
@@ -367,7 +367,7 @@ Ext.app.BaseFuncPanel = Ext.extend(Ext.grid.GridPanel, {
 	            waitMsg:'加载中...',
 				scope:this,
 				success:function(form, action) {
-					this.fireEvent('afterload',this.win);
+					this.fireEvent('afterload',this.win,form,action);
 				}
 			});	
 		}	

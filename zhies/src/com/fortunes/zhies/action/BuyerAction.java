@@ -6,23 +6,23 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.fortunes.fjdp.AppHelper;
 import com.fortunes.fjdp.admin.AdminHelper;
-import com.fortunes.fjdp.admin.model.Employee;
-
 import net.fortunes.core.action.GenericAction;
 import net.fortunes.core.service.GenericService;
 import net.fortunes.util.PinYin;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import com.fortunes.zhies.model.Buyer;
 import com.fortunes.zhies.model.Customer;
-import com.fortunes.zhies.service.CustomerService;
+import com.fortunes.zhies.service.BuyerService;
 
 @Component @Scope("prototype")
-public class CustomerAction extends GenericAction<Customer> {
+public class BuyerAction extends GenericAction<Buyer> {
 	
-	private CustomerService customerService;
+	private BuyerService buyerService;
 	
-	protected void setEntity(Customer e) throws ParseException{
+	protected void setEntity(Buyer e) throws ParseException{
+		e.setCustomer(AppHelper.toCustomer(p("customer")));
 		e.setName(p("name"));
 		e.setCode(p("code"));
 		e.setAddress(p("address"));
@@ -35,9 +35,10 @@ public class CustomerAction extends GenericAction<Customer> {
 		e.setLinkmanEmail(p("linkmanEmail"));
 	}
 	
-	protected JSONObject toJsonObject(Customer e) throws ParseException{
-		AdminHelper record = new AdminHelper();
+	protected JSONObject toJsonObject(Buyer e) throws ParseException{
+		AppHelper record = new AppHelper();
 		record.put("id", e.getId());
+		record.put("customer", e.getCustomer());
 		record.put("name", e.getName());
 		record.put("code", e.getCode());
 		record.put("address", e.getAddress());
@@ -51,10 +52,10 @@ public class CustomerAction extends GenericAction<Customer> {
 		return record.getJsonObject();
 	}
 	
-	public String getCustomers() throws Exception{
-		List<Customer> list = getDefService().findAll();
+	public String getBuyers() throws Exception{
+		List<Buyer> list = getDefService().findAll();
 		JSONArray ja = new JSONArray();
-		for(Customer c:list){
+		for(Buyer c:list){
 			String namePy = PinYin.toPinYinString(c.getName());
 			if(namePy.startsWith(getQuery().toUpperCase())
 					|| c.getName().startsWith(getQuery())){
@@ -73,16 +74,16 @@ public class CustomerAction extends GenericAction<Customer> {
 	/*=============== setter and getter =================*/
 	
 	@Override
-	public GenericService<Customer> getDefService() {
-		return customerService;
+	public GenericService<Buyer> getDefService() {
+		return buyerService;
 	}
 	
-	public void setCustomerService(CustomerService customerService) {
-		this.customerService = customerService;
+	public void setBuyerService(BuyerService buyerService) {
+		this.buyerService = buyerService;
 	}
 
-	public CustomerService getCustomerService() {
-		return customerService;
+	public BuyerService getBuyerService() {
+		return buyerService;
 	}
 
 }

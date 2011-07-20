@@ -62,6 +62,9 @@ body{
 .word {
     background-image:url( ../image/icon/word.gif ) !important;
 }
+.excel {
+    background-image:url( ../image/icon/excel.gif ) !important;
+}
 .help {
     background-image:url( ../image/icon/help.gif ) !important;
 }

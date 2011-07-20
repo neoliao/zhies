@@ -5,8 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.fortunes.fjdp.admin.model.Dict;
-
 import net.fortunes.core.Model;
 
 @Entity
@@ -23,15 +21,20 @@ public class Item extends Model{
 	
 	private double quantity;//数量
 	
-	private String unit;//单位
+	private String unit;//合同单位
 	
 	private double packageQuantity;//箱数
 	
-	private double unitQuantity;//个数
+	private double unitQuantity;//数量
+	
+	private String unitForQuantity;//个,包
 	
 	private double grossWeight;//毛重KG
 	
 	private double netWeight;//净重KG
+	
+	private String unitForWeight;
+	
 	
 	@ManyToOne
 	private Export export;
@@ -137,6 +140,22 @@ public class Item extends Model{
 
 	public void setNetWeight(double netWeight) {
 		this.netWeight = netWeight;
+	}
+
+	public void setUnitForQuantity(String unitForQuantity) {
+		this.unitForQuantity = unitForQuantity;
+	}
+
+	public String getUnitForQuantity() {
+		return unitForQuantity;
+	}
+
+	public void setUnitForWeight(String unitForWeight) {
+		this.unitForWeight = unitForWeight;
+	}
+
+	public String getUnitForWeight() {
+		return unitForWeight;
 	}
 	
 

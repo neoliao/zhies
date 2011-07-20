@@ -33,9 +33,11 @@ public class UserAction extends GenericAction<User> {
 			user.setPassword(Tools.encodePassword(p("password")));
 		}
 		
-		//user.getRoles().clear();
-		if(StringUtils.isNotEmpty(p("role"))){
-			user.setRole(AdminHelper.toRole(p("role")));
+		user.getRoles().clear();
+		if(StringUtils.isNotEmpty(p("roles"))){
+            for(String roleId : p("roles").split(",")){                             
+                    user.getRoles().add(AdminHelper.toRole(roleId));
+            }
 		}
 	}
 	
@@ -51,8 +53,11 @@ public class UserAction extends GenericAction<User> {
 		record.put("lastLoginTime", user.getLoginSession().getLastLoginTime());
 		record.put("logined", user.getLoginSession().isLogined());
 		
-		
-		record.put("role", user.getRole());
+		 JSONArray ja = new JSONArray();
+         for(Role role : user.getRoles()){
+                 ja.add(new AdminHelper().put("role", role));
+         }
+         record.put("roles", ja);
 		return record.getJsonObject();
 	}
 	

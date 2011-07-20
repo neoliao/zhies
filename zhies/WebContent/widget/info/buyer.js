@@ -1,10 +1,11 @@
 
-Customer = Ext.extend(Ext.app.BaseFuncPanel,{
+Buyer = Ext.extend(Ext.app.BaseFuncPanel,{
 	initComponent : function(){
 		Ext.apply(this,{
 			gridConfig:{
 				cm:new Ext.grid.ColumnModel([
 					new Ext.grid.RowNumberer(),
+					{header: '客户',dataIndex:'customer',renderer:dictRenderer},
 					{header: '公司名',dataIndex:'name'},
 					{header: '公司代码',dataIndex:'code'},
 					{header: '地址',dataIndex:'address'},
@@ -17,14 +18,15 @@ Customer = Ext.extend(Ext.app.BaseFuncPanel,{
 					{header: '联系人邮件',dataIndex:'linkmanEmail'}
 				]),	
 				storeMapping:[
-					'name','code','address','email','tel','fax','qq','linkman','linkmanTel','linkmanEmail'
+					'customer','name','code','address','email','tel','fax','qq','linkman','linkmanTel','linkmanEmail'
 				]
 			},
 			winConfig : {
-				height: 400
+				height: 500
 			},
 			formConfig:{
 				items: [
+					{xtype: 'f-customer',fieldLabel: '客户',hiddenName: 'customer',allowBlank: false},
 					{xtype: 'f-text',fieldLabel: '公司名',name: 'name',allowBlank: false},
 					{xtype: 'f-text',fieldLabel: '公司代码',name: 'code',allowBlank: false},
 					{xtype: 'f-text',fieldLabel: '地址',name: 'address'},
@@ -38,9 +40,10 @@ Customer = Ext.extend(Ext.app.BaseFuncPanel,{
  
 				]
 			},
-			url:ctx+'/customer'	
+			url:ctx+'/buyer'	
 		});
-		Customer.superclass.initComponent.call(this);
+		Buyer.superclass.initComponent.call(this);
 	}
 	
 });
+
