@@ -61,6 +61,12 @@
 				<privilege text="删除" name="del"/>
 				<privilege text="修改" name="edit"/>
 			</func>
+			<func name="Statements" text="对账单">
+				<privilege text="浏览" name="view"/>
+				<privilege text="增加" name="add"/>
+				<privilege text="删除" name="del"/>
+				<privilege text="修改" name="edit"/>
+			</func>
 		</func>
 		
 		<func name="Info" text="基础数据管理" icon="pencil" type="category">

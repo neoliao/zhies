@@ -15,7 +15,10 @@ Invoice = Ext.extend(Ext.app.BaseFuncPanel,{
 				]
 			},
 			winConfig : {
-				height: 330
+				height: 330,
+				title : '发票管理',
+				desc : '财务人员登记发票信息',
+				bigIconClass : 'invoice'
 			},
 			formConfig:{
 				items: [

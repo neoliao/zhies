@@ -24,7 +24,6 @@ Ext.onReady(function(){
 	            id:'loginUser',
 	            validateOnBlur:false,
 	            blankText:'用户名不能为空,请输入您的用户名',
-	            value:'admin',
 	            allowBlank:false
 	        },{
 	            fieldLabel: '密码',
@@ -33,7 +32,6 @@ Ext.onReady(function(){
 	            validateOnBlur:false,
 	            blankText:'密码不能为空',
 	            allowBlank:false,
-	            value:'admin',
 	            inputType:'password'		
 	        }
 	    ]

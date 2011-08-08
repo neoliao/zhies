@@ -1092,7 +1092,8 @@ Ext.app.CompositeSelect = Ext.extend(Ext.app.AutoSelect,{
 		Ext.app.CompositeSelect.superclass.initComponent.call(this);
 		
 		this.addEvents(
-        	'showwin'
+        	'showwin',
+        	'valueselect'
         );
         
         this.on('showwin',function(){
@@ -1252,6 +1253,7 @@ Ext.app.CompositeSelect = Ext.extend(Ext.app.AutoSelect,{
 				text : record.data.text
 			});
 			this.win.close();
+			this.fireEvent('valueselect',this, record); 
 		}
 		
 		if(String(this.getValue()) !== String(this.startValue)) {

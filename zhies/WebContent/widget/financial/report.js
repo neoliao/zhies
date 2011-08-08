@@ -16,8 +16,25 @@ TradeReport_QueryPanel = Ext.extend(Ext.form.FormPanel,{
 						{boxLabel: '进口', name: 'tradeType', inputValue: 'IMPORT'}
 					]
 				},
-				{ xtype: 'f-customer',fieldLabel: '客户',hiddenName: 'customer',id:'exportCustomer'},
-				{xtype: 's-yearmonth', fieldLabel: '月份', name: 'yearmonth',allowBlank: false},
+				{ xtype: 'f-customer',fieldLabel: '客户',hiddenName: 'customer'},
+				{xtype: 'f-radiogroup', fieldLabel: '时间范围', allowBlank: false, items: [
+						{boxLabel: '月', name: 'reportDateType', inputValue: 'YEARMONTH',checked: true},
+						{boxLabel: '年', name: 'reportDateType', inputValue: 'YEAR'}
+					],
+		            listeners:{
+		            	change : function(radioGroup,checkedRadio){
+		            		if(checkedRadio.inputValue == 'YEARMONTH'){
+		            			Ext.getCmp('YEARMONTH_field').show().enable();
+		            			Ext.getCmp('YEAR_field').hide().disable();
+		            		}else{
+		            			Ext.getCmp('YEAR_field').show().enable();
+		            			Ext.getCmp('YEARMONTH_field').hide().disable();
+		            		}
+		            	}
+		            }
+				},
+				{xtype: 's-yearmonth', fieldLabel: '月份', id:'YEARMONTH_field',name: 'yearmonth'},
+				{xtype: 'f-year', fieldLabel: '年份', id:'YEAR_field',name: 'yearNum',hidden:true},
 				{xtype: 'button', text: '查询记录',width: 80,handler: this.search,scope:this,
 					style: 'padding-top: 20px; padding-left: 60px;'}
 			] 
@@ -57,13 +74,19 @@ TradeReport = Ext.extend(Ext.app.BaseFuncPanel,{
 				]
 
 			},
-			buttonConfig :[
-			
-			],
+			buttonConfig :[{
+				text : '导出报表',
+				iconCls : 'excel',
+				scope : this,
+				handler : this.exportFile
+			}],
 			url:ctx+'/trade',
 			listUrl : '/report'
 		});
 		TradeReport.superclass.initComponent.call(this);
+	},
+	exportFile : function(){
+		location.href = this.url + '/exportReport?'+Ext.getCmp('TradeReport_QueryPanel').getForm().getValues(true);
 	}
 });
 
@@ -84,7 +107,7 @@ SalesPieChart = Ext.extend(Ext.chart.PieChart, {
             extraStyle:{
             	padding:30,
                 legend:{
-                    display: 'bottom',
+                    display: 'left',
                     padding: 5,
                     font:{
                         size: 14
@@ -117,7 +140,7 @@ CustomerPieChart = Ext.extend(Ext.chart.PieChart, {
             extraStyle:{
             	padding:30,
                 legend:{
-                    display: 'bottom',
+                    display: 'left',
                     padding: 5,
                     font:{
                         size: 14
@@ -158,7 +181,10 @@ TradeReportTabPanel = Ext.extend(Ext.TabPanel, {
 		TradeReportTabPanel.superclass.initComponent.call(this);
 		
 		this.on('tabchange',function(){
-			this.loadData(Ext.getCmp('TradeReport_QueryPanel').getForm().getValues());
+			var values = Ext.getCmp('TradeReport_QueryPanel').getForm().getValues();
+			if(values.tradeType){
+				this.loadData(values);
+			}
 		},this);
 		
 	},

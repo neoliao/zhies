@@ -49,10 +49,16 @@ public class TradeService extends GenericService<Trade> {
 		if(StringUtils.isNotEmpty(queryMap.get("customerId"))){
 			criteria.add(Restrictions.eq("customer.id", Long.parseLong(queryMap.get("customerId"))));
 		}
-		if(StringUtils.isNotEmpty(queryMap.get("dateTag"))){
+		if(StringUtils.isNotEmpty(queryMap.get("monthTag"))){
 			
 			criteria.add(Restrictions.between("createDate", 
-					Tools.getFirstDate(queryMap.get("dateTag")), Tools.getLastDate(queryMap.get("dateTag"))));
+					Tools.getFirstDate(queryMap.get("monthTag")), Tools.getLastDate(queryMap.get("monthTag"))));
+		}
+		
+		if(StringUtils.isNotEmpty(queryMap.get("yearTag"))){
+			
+			criteria.add(Restrictions.between("createDate", 
+					Tools.getFirstDate(queryMap.get("yearTag")+"-1"), Tools.getLastDate(queryMap.get("yearTag")+"-12")));
 		}
 		
 		
@@ -98,41 +104,47 @@ public class TradeService extends GenericService<Trade> {
 
 	public List<Object[]> queryProfitSummary(String monthTag) {
 		String where = "where t.status = 'FINISHED'  ";
+		String dataHql;
+		if(monthTag.indexOf("-") == -1){
+			dataHql = "year(t.createDate)";
+		}else{
+			dataHql = "year(t.createDate)||'-'||month(t.createDate)";
+		}
 		if(StringUtils.isNotEmpty(monthTag)){
-			where += " and year(t.createDate)||'-'||month(t.createDate) = '"+monthTag+"'";
+			where += " and "+dataHql+" = '"+monthTag+"'";
 		}
 		return this.getHt().find("" +
-				" select year(t.createDate)||'-'||month(t.createDate)," +
+				" select "+dataHql+"," +
 				" t.sales.displayName, t.sales.id," +
-				//" t.operator.displayName, t.operator.id," +
-				//" t.customer.name, t.customer.id," +
-				//" t.buyer.name, t.buyer.id," +
 				" sum(totalSalesPrice), sum(totalCost), sum(totalSalesPrice-totalActualCost) " +
 				" from Trade t " +where+
 				" group by " +
-				" year(t.createDate)||'-'||month(t.createDate)," +
+				" "+dataHql+"," +
 				" t.sales.displayName, t.sales.id" +
-				//" t.operator.displayName, t.operator.id," +
-				//" t.customer.name, t.customer.id," +
-				//" t.buyer.name, t.buyer.id"  +
-				"  order by year(t.createDate)||'-'||month(t.createDate) desc");
+				"  order by "+dataHql+" desc");
 	
 	}
 
-	public List<Object[]> queryProfitSummaryForCustomer(String monthTag) {
+	public List<Object[]> queryProfitSummaryForCustomer(String dateTag) {
 		String where = "where t.status = 'FINISHED'  ";
-		if(StringUtils.isNotEmpty(monthTag)){
-			where += " and year(t.createDate)||'-'||month(t.createDate) = '"+monthTag+"'";
+		String dataHql;
+		if(dateTag.indexOf("-") == -1){
+			dataHql = "year(t.createDate)";
+		}else{
+			dataHql = "year(t.createDate)||'-'||month(t.createDate)";
+		}
+		if(StringUtils.isNotEmpty(dateTag)){
+			where += " and "+dataHql+" = '"+dateTag+"'";
 		}
 		return this.getHt().find("" +
-				" select year(t.createDate)||'-'||month(t.createDate)," +
+				" select "+dataHql+"," +
 				" t.customer.name, t.customer.id," +
 				" sum(totalSalesPrice), sum(totalCost), sum(totalSalesPrice-totalActualCost) " +
 				" from Trade t " +where+
 				" group by " +
-				" year(t.createDate)||'-'||month(t.createDate)," +
+				" "+dataHql+"," +
 				" t.customer.name, t.customer.id" +
-				"  order by year(t.createDate)||'-'||month(t.createDate) desc");
+				"  order by "+dataHql+" desc");
 	}
 	
 }

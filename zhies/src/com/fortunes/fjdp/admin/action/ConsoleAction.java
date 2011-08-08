@@ -145,12 +145,16 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		Business D = new Business("D","商检");
 		Business E = new Business("E","拖车运输");
 		Business F = new Business("F","国际运输");
+		Business G = new Business("G","港建费");
+		Business Z = new Business("Z","其它费用");
 		businessService.add(A);
 		businessService.add(B);
 		businessService.add(C);
 		businessService.add(D);
 		businessService.add(E);
 		businessService.add(F);
+		businessService.add(G);
+		businessService.add(Z);
 		
 		//customer
 		Customer c = new Customer();

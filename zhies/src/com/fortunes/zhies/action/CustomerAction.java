@@ -12,6 +12,7 @@ import net.fortunes.core.action.GenericAction;
 import net.fortunes.core.service.GenericService;
 import net.fortunes.util.PinYin;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import com.fortunes.zhies.model.Customer;
@@ -56,7 +57,7 @@ public class CustomerAction extends GenericAction<Customer> {
 		JSONArray ja = new JSONArray();
 		for(Customer c:list){
 			String namePy = PinYin.toPinYinString(c.getName());
-			if(namePy.startsWith(getQuery().toUpperCase())
+			if(StringUtils.isEmpty(query) || namePy.startsWith(getQuery().toUpperCase())
 					|| c.getName().startsWith(getQuery())){
 				JSONObject record = new JSONObject();
 				record.put("id", c.getId());
