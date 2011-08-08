@@ -14,7 +14,13 @@ Ext.app.sYearMonthSelect = Ext.extend(Ext.form.CompositeField,{
 });
 Ext.reg('s-yearmonth', Ext.app.sYearMonthSelect);
 
-CustomerSelect = Ext.extend(Ext.app.SelectField,{
+ExportSelect = Ext.extend(Ext.app.CompositeSelect,{
+	storeFields : ['id','text','code','pinyin','relative','customerName','buyerName','itemDesc','itemQuantity'],	
+	dataUrl : '/export/getExports'
+});
+Ext.reg('f-exportselect', ExportSelect);
+
+CustomerSelect = Ext.extend(Ext.app.CompositeSelect,{
 	dataUrl : '/customer/getCustomers'
 });
 Ext.reg('f-customer', CustomerSelect);

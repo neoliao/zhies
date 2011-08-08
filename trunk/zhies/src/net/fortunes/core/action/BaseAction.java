@@ -247,6 +247,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,Ser
 		return render(bytes, "application/octet-stream");
 	}
 	
+	protected String renderFile(byte[] bytes,String fileName,String mime)throws Exception{
+		response.addHeader("Content-Disposition", 
+				"attachment;filename="+new String(fileName.getBytes("GB2312"),"ISO-8859-1"));
+		return render(bytes, mime);
+	}
+	
 	
 	/**
 	 * 输出一个二进制流,主要用于显示图片等

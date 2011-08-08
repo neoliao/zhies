@@ -37,6 +37,13 @@ body{
 /*
  * icons
  */
+.anchor {
+	background-image:url(../image/icon/anchor.png) !important;
+}
+
+.addPage {
+	background-image:url(../image/icon/add_page.png) !important;
+}
 
 .printer {
 	background-image:url(../image/icon/printer.gif) !important;
@@ -63,7 +70,7 @@ body{
     background-image:url( ../image/icon/word.gif ) !important;
 }
 .excel {
-    background-image:url( ../image/icon/excel.gif ) !important;
+    background-image:url( ../image/icon/excel.png ) !important;
 }
 .help {
     background-image:url( ../image/icon/help.gif ) !important;
@@ -569,32 +576,14 @@ body{
 	background-image:url( ../image/bigIcon/default.gif ) !important;
 }
 
-.step_one_BigIcon {
-	background-image:url(../image/bigIcon/game_shop_1.gif) !important;
+
+
+.trade {
+	background-image:url(../image/bigIcon/package.png) !important;
 }
 
-.step_two_BigIcon {
-	background-image:url(../image/bigIcon/game_shop_2.gif) !important;
-}
-
-.step_three_BigIcon {
-	background-image:url(../image/bigIcon/game_shop_3.gif) !important;
-}
-
-.step_four_BigIcon {
-	background-image:url(../image/bigIcon/game_shop_4.gif) !important;
-}
-
-.step_five_BigIcon {
-	background-image:url(../image/bigIcon/game_shop_5.gif) !important;
-}
-
-.step_six_BigIcon {
-	background-image:url(../image/bigIcon/game_shop_6.gif) !important;
-}
-
-.step_seven_BigIcon {
-	background-image:url(../image/bigIcon/game_shop_7.gif) !important;
+.invoice {
+	background-image:url(../image/bigIcon/invoice.png) !important;
 }
 
 .employeeIcon{

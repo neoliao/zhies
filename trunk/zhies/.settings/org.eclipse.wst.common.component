@@ -4,7 +4,7 @@
         <wb-resource deploy-path="/" source-path="/WebContent"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/conf"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/data"/>
         <property name="context-root" value="zhies"/>
         <property name="java-output-path" value="/zhies/build/classes"/>
     </wb-module>
