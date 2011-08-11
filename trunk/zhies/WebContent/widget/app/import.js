@@ -1,12 +1,11 @@
 
 
-Export = Ext.extend(Ext.app.BaseFuncPanel,{
+Import = Ext.extend(Ext.app.BaseFuncPanel,{
 	loadFromGrid : false,
 	initComponent : function(){
 		var statusRenderer = function(v){
 			var map = {
 				'CREATED' : '新建业务',
-				//'SUBMITED' : '已提交',
 				'ASSIGNED' : '已分配操作员',
 				'OPERATOR_SAVED' : '操作已保存',
 				'OPERATOR_SUBMITED' : '操作已提交',
@@ -74,10 +73,10 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 				},{
 					text : '导出单证',
 					iconCls : 'excel',
-					id : 'export_file-Bt',
+					id : 'import_file-Bt',
 					privilegeCode: this.funcCode + '_export_file',
 					scope : this,
-					handler : this.exportFile
+					handler : this.importFile
 				},{
 					text : '查看操作',
 					iconCls : 'view',
@@ -102,18 +101,18 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 						columnWidth:.5,layout: 'form',border: false,
 						items: [
 							{ xtype: 'fieldset',title: '基本信息',items:[
-								{ xtype: 'f-customer',fieldLabel: '客户',hiddenName: 'customer',id:'exportCustomer',allowBlank: false},
-								{ xtype: 'f-buyer',fieldLabel: '买方',hiddenName: 'buyer',id:'exportBuyer'},
-								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '出口地',
+								{ xtype: 'f-customer',fieldLabel: '客户',hiddenName: 'customer',id:'importCustomer',allowBlank: false},
+								{ xtype: 'f-buyer',fieldLabel: '买方',hiddenName: 'buyer',id:'importBuyer'},
+								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '进口地',
 								    items: [
 								        {xtype : 'f-text',name: 'loadingCity',value:'深圳',width: 84},
-								        {xtype : 'displayfield',value: '出口口岸:'},
+								        {xtype : 'displayfield',value: '进口口岸:'},
 								        { xtype: 'f-text',name: 'loadingPort',width: 84}
 								    ]
-								},{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '目的地',
+								},{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '出口地',
 								    items: [
 								        {xtype : 'f-text',name: 'destination',width: 84},
-								        {xtype : 'displayfield',value: '目的港口:'},
+								        {xtype : 'displayfield',value: '出口港口:'},
 								        { xtype: 'f-text',name: 'destinationPort',width: 84}
 								    ]
 								},
@@ -126,7 +125,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 								        { xtype: 'f-text',name: 'cabType',width: 84}
 								    ]
 								},
-								{ xtype: 'f-text',fieldLabel: 'SO号码',name: 'soNo'},
+								{xtype : 'f-text',fieldLabel: 'SO号码',name: 'soNo'},
 								{xtype : 'f-text',fieldLabel: '货物描述',name: 'itemDesc',allowBlank: false},
 								{xtype : 'f-text',fieldLabel: '货物大概数量',name: 'itemQuantity'}
 								
@@ -153,15 +152,6 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 								        {xtype : 'f-number',width: 60,name:'cost_B'},
 								        {xtype : 'displayfield',value: '销售价'},
 								        {xtype : 'f-number',width: 60,name:'salesPrice_B'}
-								        
-								    ]
-								},{ xtype: 'compositefield',labelWidth: 20,
-								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'C.产地证制作',name:'checkedBusiness_C',width: 20},
-								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_C'},
-								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_C'}
 								        
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
@@ -200,6 +190,27 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
+								        {xtype : 'checkbox',fieldLabel: 'H.代交关税',name:'checkedBusiness_H',width: 20},
+								        {xtype : 'displayfield',value: '成本价'},
+								        {xtype : 'f-number',width: 60,name:'cost_H'},
+								        {xtype : 'displayfield',value: '销售价'},
+								        {xtype : 'f-number',width: 60,name:'salesPrice_H'}
+								        
+								    ]
+								}
+								/*,{ xtype: 'compositefield',labelWidth: 20,
+								    items: [
+								     	{xtype : 'displayfield',value: '增值税'},
+								     	{xtype : 'f-number',width: 60,name:'valueAddedTax'},
+								        {xtype : 'displayfield',value: '消费税'},
+								        {xtype : 'f-number',width: 60,name:'consumeTax'},
+								        {xtype : 'displayfield',value: '滞纳金'},
+								        {xtype : 'f-number',width: 60,name:'delayFee'}
+								        
+								    ]
+								}*/
+								,{ xtype: 'compositefield',labelWidth: 20,
+								    items: [
 								        {xtype : 'checkbox',fieldLabel: 'Z.其它费用',name:'checkedBusiness_Z',width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
 								        {xtype : 'f-number',width: 60,name:'cost_Z'},
@@ -213,17 +224,11 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 				}]
 				
 			},
-			url:ctx+'/export'	
+			url:ctx+'/import'	
 		});
-		Export.superclass.initComponent.call(this);
+		Import.superclass.initComponent.call(this);
 		
 		this.getSelectionModel().on('rowselect',this.changeOperateStatus,this);
-		
-		//this.on('beforesave',this.beforeAdd,this);
-		
-		this.on('afterload',this.afterLoad,this);
-		
-		//this.on('winshow',this.winShow,this);
 		
 	},
 	viewTrade : function(){
@@ -232,24 +237,12 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 	},
 	viewOperator : function(){
 		this.showOperatorWin();
-		Ext.getCmp('export_operator_save-Bt').hide();
+		Ext.getCmp('import_operator_save-Bt').hide();
 		Ext.getCmp('copyOperator-Bt').hide();
-		Ext.getCmp('exportItemsGrid').getTopToolbar().hide();
+		Ext.getCmp('importItemsGrid').getTopToolbar().hide();
 	},
-	exportFile : function(){
+	importFile : function(){
 		location.href = this.url + '/exportFilePoi?id='+this.selectedId;
-	},
-	afterLoad : function(win,form,action){
-		/*var itemsData = action.result.data.itemsData;
-		Ext.getCmp('exportItemsGrid').store.loadData(itemsData);
-		if(this.saveType == 'update'){
-			Ext.getCmp('exportCustomer').setReadOnly(true);
-			var r = this.getSelectionModel().getSelected();
-			if(r.data.status != 'CREATED'){
-				this.saveBt.hide();
-				Ext.getCmp('exportItemsGrid').getTopToolbar().hide();
-			}
-		}*/
 	},
 	changeOperateStatus: function(sm,rowIndex,record){
 		
@@ -258,10 +251,6 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 				item.hide();
 		});
 		this.addBt.show();
-		
-		/*if(loginUser.ownRole('sales')){
-			Ext.getCmp('copy-Bt').show();
-		}*/
 		
 		
 		if(record.data.status == 'CREATED'){
@@ -297,7 +286,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 			}
 			if(record.data.operator.text == loginUser.userName){
 				Ext.getCmp('operator-Bt').show();
-				Ext.getCmp('export_file-Bt').show();
+				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('operator_submit-Bt').show();
 			}
 			if(loginUser.ownRole('manager')){
@@ -313,7 +302,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 			}
 			if(record.data.operator.text == loginUser.userName){
 				Ext.getCmp('operator-Bt').show();
-				Ext.getCmp('export_file-Bt').show();
+				Ext.getCmp('import_file-Bt').show();
 			}
 			if(loginUser.ownRole('manager')){
 				Ext.getCmp('assign-Bt').show();
@@ -326,12 +315,12 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 		
 		if(record.data.status == 'COST_CONFIRMED'){
 			if(record.data.operator.text == loginUser.userName){
-				Ext.getCmp('export_file-Bt').show();
+				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
 			if(loginUser.ownRole('manager')){
-				Ext.getCmp('export_file-Bt').show();
+				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
@@ -339,12 +328,12 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 		
 		if(record.data.status == 'FINISHED'){
 			if(record.data.operator.text == loginUser.userName){
-				Ext.getCmp('export_file-Bt').show();
+				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
 			if(loginUser.ownRole('manager')){
-				Ext.getCmp('export_file-Bt').show();
+				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
@@ -355,7 +344,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 	showOperatorWin: function(){
 		var operWin = new Ext.app.FormWindow({
 			iconCls : 'anchor',
-			id : 'export_operator_win',
+			id : 'import_operator_win',
 			winConfig : {
 				height: 700,
 				width: 850,
@@ -420,13 +409,12 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 								{ xtype: 'f-text',fieldLabel: '签约地点',name: 'signCity',value:'深圳'},
 								{ xtype: 'f-text',fieldLabel: '付款条件',name: 'payCondition',value:'先出后结'},
 								{ xtype: 'f-text',fieldLabel: '标记唛头及备注',name: 'memos',value:'不退税'},
-								//{ xtype: 'f-text',fieldLabel: '报关资料联系人',name: 'taxMemos'},
 								{ xtype: 'f-text',fieldLabel: '境内货源地',name: 'itemsCity',value:'深圳'}
 							]},
-							{ xtype: 'fieldset',title: 'C.产地证制作',items:[
-								{ xtype: 'f-text',fieldLabel: '产地证号',name: 'producerNo'},
-								{ xtype: 'f-number',fieldLabel: '箱数',name: 'packageNumber'},
-								{ xtype: 'f-date',fieldLabel: '产地日期',name: 'produceDate'}
+							{ xtype: 'fieldset',title: 'H.代交关税',items:[
+								{ xtype: 'f-number',fieldLabel: '增值税',name: 'valueAddedTax'},
+								{ xtype: 'f-number',fieldLabel: '消费税',name: 'consumeTax'},
+								{ xtype: 'f-number',fieldLabel: '滞纳金',name: 'delayFee'}
 							]}
 						]
 						
@@ -483,14 +471,14 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 							
 						]
 					}]
-				},{xtype : 'f-itemsgrid',id:'exportItemsGrid',style : 'padding-top : 20px;',height:200}]
+				},{xtype : 'f-itemsgrid',id:'importItemsGrid',style : 'padding-top : 20px;',height:200}]
 			},
 			buttons : [{
 				text: '保存',
-				id : 'export_operator_save-Bt',
+				id : 'import_operator_save-Bt',
 				scope:this,
 				handler : function(){
-					var grid = Ext.getCmp('exportItemsGrid');
+					var grid = Ext.getCmp('importItemsGrid');
 					grid.stopEditing();
 					if(grid.store.getCount() <= 0){
 						App.msg("未添加任何货物信息");
@@ -576,7 +564,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 			scope:this,
 			success:function(form, action) {
 				var itemsData = action.result.data.itemsData;
-				Ext.getCmp('exportItemsGrid').store.loadData(itemsData);
+				Ext.getCmp('importItemsGrid').store.loadData(itemsData);
 			}
 		});	
 		return operWin;
@@ -593,7 +581,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 			},
 			formConfig : {
 				items : [
-					{ xtype: 'f-exportselect',fieldLabel: '已有业务',hiddenName: 'fromExport',id:'exportOperatorSelect',toTrade:this.selectedId,allowBlank: false},
+					{ xtype: 'f-importselect',fieldLabel: '已有业务',hiddenName: 'fromImport',id:'importOperatorSelect',toTrade:this.selectedId,allowBlank: false},
 					{ xtype: 'f-text',fieldLabel: '客户',name: 'customerName',id:'copyOperator-customerName',readOnly:true},
 					//{ xtype: 'f-text',fieldLabel: '买方',name: 'buyerName',id:'copyOperator-buyerName',readOnly:true},
 					{xtype : 'f-text',fieldLabel: '货物描述',name: 'itemDesc',id:'copyOperator-itemDesc',readOnly:true},
@@ -614,7 +602,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 							this.store.reload({
 								scope : this,
 								callback : function(){
-									Ext.getCmp('export_operator_win').formPanel.getForm().load({
+									Ext.getCmp('import_operator_win').formPanel.getForm().load({
 										url : this.url+ '/loadOperator',
 										params : { id : this.selectedId },
 							            waitMsg:'加载中...',
@@ -622,7 +610,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 										success:function(form, action) {
 											
 											var itemsData = action.result.data.itemsData;
-											Ext.getCmp('exportItemsGrid').store.loadData(itemsData);
+											Ext.getCmp('importItemsGrid').store.loadData(itemsData);
 										}
 									});	
 									var sm = this.getSelectionModel();
@@ -637,7 +625,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 		});
 		assignWin.show();
 		//assignWin.formPanel.getForm().loadRecord(this.getSelectionModel().getSelected());
-		Ext.getCmp('exportOperatorSelect').on('valueselect',function(selector,record){
+		Ext.getCmp('importOperatorSelect').on('valueselect',function(selector,record){
 			Ext.getCmp('copyOperator-customerName').setValue(record.data.customerName);
 			//Ext.getCmp('copyOperator-buyerName').setValue(record.data.buyerName);
 			Ext.getCmp('copyOperator-itemDesc').setValue(record.data.itemDesc);
@@ -685,7 +673,6 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 		});
 		assignWin.show();
 	},
-
 	submitToConfirm : function(){
 		Ext.MessageBox.confirm('提交确认',
 			'您确实要提交该业务吗?提交后不能进行任何更改!',
@@ -724,10 +711,10 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 				layout: 'column',border: false,
 				items : [{
 					columnWidth:.4,layout: 'form',border: false,
-					items: {xtype:'f-mustgain',dataUrl : '/export/mustGain',title : '应收款',height:300,id : 'export-mustgain'}
+					items: {xtype:'f-mustgain',dataUrl : '/import/mustGain',title : '应收款',height:300,id : 'import-mustgain'}
 				},{
 					columnWidth:.6,layout: 'form',border: false,
-					items: {xtype:'f-mustpay',dataUrl : '/export/mustPay',title : '应付款',height:300,id : 'export-mustpay'}
+					items: {xtype:'f-mustpay',dataUrl : '/import/mustPay',title : '应付款',height:300,id : 'import-mustpay'}
 				}]
 			},
 			buttons : [{
@@ -736,8 +723,8 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 				handler : function(){
 					this.ajaxParams = { id :this.getSelectionModel().getSelected().id };
 		
-					var mustPayGrid = Ext.getCmp('export-mustpay');
-					var mustGainGrid = Ext.getCmp('export-mustgain');
+					var mustPayGrid = Ext.getCmp('import-mustpay');
+					var mustGainGrid = Ext.getCmp('import-mustgain');
 					mustPayGrid.store.commitChanges();
 					mustGainGrid.store.commitChanges();
 					
@@ -779,8 +766,8 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 		});
 		confirmWin.show();
 		
-		Ext.getCmp('export-mustgain').store.load({params:{id : this.getSelectionModel().getSelected().id }});
-		Ext.getCmp('export-mustpay').store.load({params:{id : this.getSelectionModel().getSelected().id }});
+		Ext.getCmp('import-mustgain').store.load({params:{id : this.getSelectionModel().getSelected().id }});
+		Ext.getCmp('import-mustpay').store.load({params:{id : this.getSelectionModel().getSelected().id }});
 	}
 	
 });

@@ -59,7 +59,7 @@ public class TradeAction extends GenericAction<Trade> {
 		record.put("id", e.getId());
 		record.put("code", e.getCode());
 		record.put("createDate", e.getCreateDate());
-		record.put("reportPortDate", ((Export)e).getReportPortDate());
+		record.put("reportPortDate", e.getReportPortDate());
 		record.put("buyer", e.getBuyer());
 		record.put("buyerName", e.getBuyer().getName());
 		record.put("customer", e.getCustomer());
@@ -68,10 +68,13 @@ public class TradeAction extends GenericAction<Trade> {
 		record.put("salesName", e.getSales().getDisplayName());
 		record.put("operator", e.getOperator());
 		record.put("operatorName", e.getOperator().getName());
-		record.put("loadingPort", ((Export)e).getLoadingPort());
+		record.put("loadingPort", e.getLoadingPort());
+		record.put("cabNo", e.getLoadingPort());
+		record.put("soNo", e.getLoadingPort());
 		
-		record.put("verificationCompany", ((Export)e).getVerificationCompany());
-		record.put("verificationFormNo", ((Export)e).getVerificationFormNo());
+		
+		record.put("verificationCompany",e.getVerificationCompany());
+		record.put("verificationFormNo", e.getVerificationFormNo());
 		
 		List<BusinessInstance> busiList = e.getBusinessInstances();
 		for(BusinessInstance b : busiList){
@@ -81,6 +84,8 @@ public class TradeAction extends GenericAction<Trade> {
 		record.put("totalSalesPrice", e.getTotalSalesPrice());
 		record.put("totalActuralCost", e.getTotalActualCost());
 		record.put("totalCost", e.getTotalCost());
+		record.put("totalPackage", e.getTotalPackage());
+		
 		record.put("profit", e.getTotalSalesPrice()-e.getTotalActualCost());
 		record.put("commission", e.getTotalSalesPrice()-e.getTotalCost());
 		
@@ -246,7 +251,7 @@ public class TradeAction extends GenericAction<Trade> {
 		
 		String title = p("year")+"年"+p("month")+"月"+customer.getName()+"对账单";
 		
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 10));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 13));
 		
 		HSSFCellStyle bigStyle = workbook.createCellStyle();
 		HSSFFont big = workbook.createFont();
@@ -265,7 +270,9 @@ public class TradeAction extends GenericAction<Trade> {
 		setCell(k++, titleRow, "买方");
 		setCell(k++, titleRow, "货物");
 		setCell(k++, titleRow, "港口");
-		
+		setCell(k++, titleRow, "货柜名称");
+		setCell(k++, titleRow, "SO号码");
+		setCell(k++, titleRow, "箱数");
 
 		setCell(k++, titleRow,  "报关服务费");
 		setCell(k++, titleRow,  "单证制作费");
@@ -282,10 +289,12 @@ public class TradeAction extends GenericAction<Trade> {
 		for(Trade e : listData.getList()){
 			int j = 0;
 			HSSFRow row = sheet.createRow(i);
-			//setCell(j++, row, e.getCustomer().getName());
 			setCell(j++, row, e.getBuyer().getName());
 			setCell(j++, row, e.getItemDesc());
-			setCell(j++, row, ((Export)e).getLoadingPort());
+			setCell(j++, row, e.getLoadingPort());
+			setCell(j++, row, e.getCabNo());
+			setCell(j++, row, e.getSoNo());
+			setCell(j++, row, e.getTotalPackage());
 			setCell(j++, row,  getBussinessPrice("A",e.getBusinessInstances()));
 			setCell(j++, row,  getBussinessPrice("B",e.getBusinessInstances()));
 			setCell(j++, row,  getBussinessPrice("C",e.getBusinessInstances()));

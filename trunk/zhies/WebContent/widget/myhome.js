@@ -7,11 +7,6 @@ Myhome.Welcome = Ext.extend(Ext.Panel,{
 	
 });
 
-var f=function(){
-	if (v == 01) {
-		Ext.MessageBox.alert('成功啦！');
-	} 
-}
 
 Myhome.LoginStat = Ext.extend(Ext.app.Portal,{
 	id : 'loginStat-portal',
@@ -19,6 +14,16 @@ Myhome.LoginStat = Ext.extend(Ext.app.Portal,{
 	privilegeCode : 'LoginStat_view',
 	autoLoad: {
     	url : ctx+'/myhome/loginStat',
+    	scripts : true
+    }
+});
+
+Myhome.MustGainReminder = Ext.extend(Ext.app.Portal,{
+	id : 'MustGainReminder-portal',
+	title: '应收款提醒',
+	privilegeCode : 'MustGainReminder_view',
+	autoLoad: {
+    	url : ctx+'/myhome/mustGainReminder',
     	scripts : true
     }
 });
@@ -59,6 +64,7 @@ MyHome = Ext.extend(Ext.Panel,{
 		this.items = [
 			new Myhome.Welcome({anchor: '-10'}),
 			new Myhome.LoginStat({anchor: '-10'}),
+			new Myhome.MustGainReminder({anchor: '-10'}),
 			new Myhome.Notice({anchor: '-10'})
 		];
     	MyHome.superclass.initComponent.call(this);

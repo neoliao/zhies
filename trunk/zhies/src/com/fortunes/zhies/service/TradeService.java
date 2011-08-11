@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import com.fortunes.fjdp.AppHelper;
 import com.fortunes.fjdp.admin.model.User;
 import com.fortunes.fjdp.admin.service.UserService;
+import com.fortunes.zhies.model.Accounts;
 import com.fortunes.zhies.model.Export;
 import com.fortunes.zhies.model.Trade;
 
@@ -145,6 +146,17 @@ public class TradeService extends GenericService<Trade> {
 				" "+dataHql+"," +
 				" t.customer.name, t.customer.id" +
 				"  order by "+dataHql+" desc");
+	}
+	
+	public List<Trade> getMustGainReminder(User authedUser) {
+		Date today = new Date();
+		String whereHql = "";
+		if(userService.ownRole(authedUser, "manager")){
+			whereHql = " ";
+		}else{
+			whereHql = " and t.sales.id = "+authedUser.getId();
+		}
+		return this.find(" from Trade t where t.status = 'COST_CONFIRMED' "+whereHql+" order by t.finishDate desc");
 	}
 	
 }

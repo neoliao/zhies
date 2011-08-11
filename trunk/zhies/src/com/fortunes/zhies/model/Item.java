@@ -37,7 +37,7 @@ public class Item extends Model{
 	
 	
 	@ManyToOne
-	private Export export;
+	private Trade trade;
 	
     public Item() {
     }
@@ -94,14 +94,6 @@ public class Item extends Model{
 		this.quantity = quantity;
 	}
 
-	public void setExport(Export export) {
-		this.export = export;
-	}
-
-	public Export getExport() {
-		return export;
-	}
-
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
@@ -156,6 +148,14 @@ public class Item extends Model{
 
 	public String getUnitForWeight() {
 		return unitForWeight;
+	}
+
+	public void setTrade(Trade trade) {
+		this.trade = trade;
+	}
+
+	public Trade getTrade() {
+		return trade;
 	}
 	
 

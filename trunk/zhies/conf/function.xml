@@ -5,6 +5,9 @@
 			<func name="NoticePortal" text="公告信息">
 				<privilege text="浏览" name="view"/>
 			</func>
+			<func name="MustGainReminder" text="应收款提醒">
+				<privilege text="浏览" name="view"/>
+			</func> 
 			<func name="LoginStat" text="登陆信息统计">
 				<privilege text="浏览" name="view"/>
 			</func> 
