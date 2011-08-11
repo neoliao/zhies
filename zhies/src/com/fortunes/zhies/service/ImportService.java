@@ -7,27 +7,25 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.fortunes.fjdp.admin.model.User;
-import com.fortunes.fjdp.admin.service.UserService;
-import com.fortunes.zhies.model.Accounts;
-import com.fortunes.zhies.model.BusinessInstance;
-import com.fortunes.zhies.model.Export;
-import com.fortunes.zhies.model.Item;
-import com.fortunes.zhies.model.Trade.Status;
-
 import net.fortunes.core.service.GenericService;
 
 import org.apache.commons.lang.xwork.StringUtils;
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Component;
 
+import com.fortunes.fjdp.admin.model.User;
+import com.fortunes.fjdp.admin.service.UserService;
+import com.fortunes.zhies.model.Accounts;
+import com.fortunes.zhies.model.BusinessInstance;
+import com.fortunes.zhies.model.Import;
+import com.fortunes.zhies.model.Item;
+import com.fortunes.zhies.model.Trade.Status;
+
 @Component
-public class ExportService extends GenericService<Export> {
+public class ImportService extends GenericService<Import> {
 	
 	@Resource private UserService userService;
 	@Resource private BuyerService buyerService;
@@ -62,52 +60,52 @@ public class ExportService extends GenericService<Export> {
 	
 	
 
-	public void createExportInstance(Export export,
+	public void createImportInstance(Import imports,
 			List<BusinessInstance> busis) throws Exception {
-		add(export);
+		add(imports);
 		
 		for(BusinessInstance b : busis){
-			b.setTrade(export);
+			b.setTrade(imports);
 			this.getHt().save(b);
 		}
 		
-		export.setCode(getExportCode(export));
+		imports.setCode(getImportCode(imports));
 		
 	}
 	
-	public void updateExportInstance(Export export, List<BusinessInstance> busis) {
+	public void updateImportInstance(Import imports, List<BusinessInstance> busis) {
 		
-		this.getHt().deleteAll(export.getBusinessInstances());
+		this.getHt().deleteAll(imports.getBusinessInstances());
 		for(BusinessInstance b : busis){
-			b.setTrade(export);
+			b.setTrade(imports);
 			this.getHt().save(b);
 		}
 		
-		update(export);
+		update(imports);
 		
 	}
 	
-	private String getExportCode(Export export){
+	private String getImportCode(Import imports){
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
-		this.getHt().refresh(export);
-		return "I-"+export.getCustomer().getCode()+"-"+format.format(export.getCreateDate())+"-"+export.getId();
+		this.getHt().refresh(imports);
+		return "I-"+imports.getCustomer().getCode()+"-"+format.format(imports.getCreateDate())+"-"+imports.getId();
 	}
 
-	public void updateOperator(Export export, List<Item> items,long[] deletedItemIds) {
+	public void updateOperator(Import imports, List<Item> items,long[] deletedItemIds) {
 		if(deletedItemIds != null){
 			for(long itemId : deletedItemIds){
 				this.getHt().delete(new Item(itemId));
 			}
 		}
 		for(Item i : items){
-			i.setTrade(export);
+			i.setTrade(imports);
 			this.getHt().saveOrUpdate(i);
 		}
-		update(export);
+		update(imports);
 	}
 
-	public void confirmCost(Export export, List<Accounts> accountsList) {
-		List<BusinessInstance> busiList = export.getBusinessInstances();
+	public void confirmCost(Import imports, List<Accounts> accountsList) {
+		List<BusinessInstance> busiList = imports.getBusinessInstances();
 		double totalSalesPrice = 0.0;
 		double totalCost = 0.0;
 		double totalActualCost = 0.0;
@@ -117,30 +115,28 @@ public class ExportService extends GenericService<Export> {
 			totalSalesPrice += b.getSalesPrice();
 			totalCost += b.getCost();
 			totalActualCost += b.getActualCost();
-			
 		}
-		
-		for(Item i : export.getItems()){
+		for(Item i : imports.getItems()){
 			totalPackage += i.getPackageQuantity();
 		}
-		export.setTotalSalesPrice(totalSalesPrice);
-		export.setTotalCost(totalCost);
-		export.setTotalActualCost(totalActualCost);
-		export.setTotalPackage(totalPackage);
-		export.setFinishDate(new Date());
+		imports.setTotalSalesPrice(totalSalesPrice);
+		imports.setTotalCost(totalCost);
+		imports.setTotalActualCost(totalActualCost);
+		imports.setTotalPackage(totalPackage);
+		imports.setFinishDate(new Date());
 		
 		for(Accounts a : accountsList){
 			this.getHt().save(a);
 		}
-		update(export);
+		update(imports);
 		
 	}
 
-	public void copy(Export fromExport, Export toExport) {
-		this.getHt().deleteAll(toExport.getItems());
+	public void copy(Import fromImport, Import toImport) {
+		this.getHt().deleteAll(toImport.getItems());
 		
-		for(Item item : fromExport.getItems()){
-			item.setTrade(toExport);
+		for(Item item : fromImport.getItems()){
+			item.setTrade(toImport);
 			Item newItem = new Item();
 			this.getHt().save(newItem);
 			item.setId(newItem.getId());
@@ -149,22 +145,22 @@ public class ExportService extends GenericService<Export> {
 		}
 		
 		//retail data
-		fromExport.setId(toExport.getId());
-		fromExport.setCreateDate(toExport.getCreateDate());
-		fromExport.setFinishDate(toExport.getFinishDate());
-		fromExport.setEndedDate(toExport.getEndedDate());
-		fromExport.setItemDesc(toExport.getItemDesc());
-		fromExport.setItemQuantity(toExport.getItemQuantity());
-		fromExport.setCustomer(toExport.getCustomer());
-		fromExport.setSales(toExport.getSales());
-		fromExport.setOperator(toExport.getOperator());
-		fromExport.setTotalActualCost(0.0);
-		fromExport.setTotalCost(0.0);
-		fromExport.setTotalSalesPrice(0.0);
+		fromImport.setId(toImport.getId());
+		fromImport.setCreateDate(toImport.getCreateDate());
+		fromImport.setFinishDate(toImport.getFinishDate());
+		fromImport.setEndedDate(toImport.getEndedDate());
+		fromImport.setItemDesc(toImport.getItemDesc());
+		fromImport.setItemQuantity(toImport.getItemQuantity());
+		fromImport.setCustomer(toImport.getCustomer());
+		fromImport.setSales(toImport.getSales());
+		fromImport.setOperator(toImport.getOperator());
+		fromImport.setTotalActualCost(0.0);
+		fromImport.setTotalCost(0.0);
+		fromImport.setTotalSalesPrice(0.0);
 		
-		this.getHt().evict(fromExport);
-		fromExport.setStatus(Status.OPERATOR_SAVED);
-		this.getHt().merge(fromExport);
+		this.getHt().evict(fromImport);
+		fromImport.setStatus(Status.OPERATOR_SAVED);
+		this.getHt().merge(fromImport);
 		
 	}
 

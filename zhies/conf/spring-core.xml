@@ -53,6 +53,7 @@
 		      
 		     
 		      <value>com.fortunes.zhies.model.Trade</value>
+		      <value>com.fortunes.zhies.model.Import</value>
 		      <value>com.fortunes.zhies.model.Export</value>
 		      <value>com.fortunes.zhies.model.Item</value>
 		      <value>com.fortunes.zhies.model.Business</value>

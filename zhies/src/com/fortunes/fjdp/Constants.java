@@ -17,6 +17,7 @@ public class Constants {
 	public static String COMPANY_NAME = "深圳市中惠进出口有限公司";
 	public static String COMPANY_NAME_EN = "Shenzhen Zhonghui Import and Export CO.,Ltd";
 	public static String COMPANY_ADDR = "深圳市罗湖区爱国路东湖一街1号园林大厦609室";
+	public static String COMPANY_ADDR_EN = "Room609, YuanLin Buiding, Aiguo Road, Luohu District, Shenzhen City, China";
 	public static String COMPANY_TEL = "0755-25405488";
 	public static String COMPANY_FAX = "0755-25402925";
 	public static String COMPANY_CUSTOME_CODE = "4403063166";

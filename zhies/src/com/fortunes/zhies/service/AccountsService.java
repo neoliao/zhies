@@ -1,9 +1,14 @@
 package com.fortunes.zhies.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import com.fortunes.fjdp.admin.model.Dict;
+import com.fortunes.fjdp.admin.model.User;
+import com.fortunes.fjdp.admin.service.UserService;
 import com.fortunes.zhies.model.Accounts;
 import com.fortunes.zhies.model.Accounts.AccountsType;
 import com.fortunes.zhies.model.Trade;
@@ -20,6 +25,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AccountsService extends GenericService<Accounts> {
+	
+	@Resource private UserService userService;
 	
 	@Override
 	protected DetachedCriteria getConditions(String query,
@@ -52,9 +59,12 @@ public class AccountsService extends GenericService<Accounts> {
 			
 			Trade t = accounts.getTrade();
 			t.setStatus(Trade.Status.FINISHED);
+			t.setEndedDate(finishDate);
 			this.getHt().update(t);
 		}
 		
 	}
+
+	
 	
 }

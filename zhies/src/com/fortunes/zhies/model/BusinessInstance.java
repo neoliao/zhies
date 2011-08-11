@@ -21,7 +21,7 @@ public class BusinessInstance extends Model{
 	private double cost;
 	
 	@ManyToOne
-	private Export export;
+	private Trade trade;
 	
 	
     public BusinessInstance() {
@@ -62,14 +62,6 @@ public class BusinessInstance extends Model{
 		this.actualCost = actualCost;
 	}
 
-	public void setExport(Export export) {
-		this.export = export;
-	}
-
-	public Export getExport() {
-		return export;
-	}
-
 	public void setCost(double cost) {
 		this.cost = cost;
 	}
@@ -84,6 +76,14 @@ public class BusinessInstance extends Model{
 
 	public double getSalesPrice() {
 		return salesPrice;
+	}
+
+	public void setTrade(Trade trade) {
+		this.trade = trade;
+	}
+
+	public Trade getTrade() {
+		return trade;
 	}
 	
 

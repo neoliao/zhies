@@ -20,6 +20,12 @@ ExportSelect = Ext.extend(Ext.app.CompositeSelect,{
 });
 Ext.reg('f-exportselect', ExportSelect);
 
+ImportSelect = Ext.extend(Ext.app.CompositeSelect,{
+	storeFields : ['id','text','code','pinyin','relative','customerName','buyerName','itemDesc','itemQuantity'],	
+	dataUrl : '/import/getImports'
+});
+Ext.reg('f-importselect', ImportSelect);
+
 CustomerSelect = Ext.extend(Ext.app.CompositeSelect,{
 	dataUrl : '/customer/getCustomers'
 });
@@ -204,7 +210,7 @@ MustPayGrid = Ext.extend(Ext.grid.EditorGridPanel,{
 			store : new Ext.data.JsonStore({
 				root: 'data',
 		        fields: this.FieldItem,
-		        url : ctx+'/export/mustPay'
+		        url : ctx + this.dataUrl
 			}),
     		cm: new Ext.grid.ColumnModel([{
 	        	header: "名称",dataIndex: 'name',width: 120
@@ -234,7 +240,7 @@ MustGainGrid = Ext.extend(Ext.grid.EditorGridPanel,{
 			store : new Ext.data.JsonStore({
 				root: 'data',
 		        fields: this.FieldItem,
-		        url : ctx+'/export/mustGain'
+		        url : ctx+ this.dataUrl
 			}),
     		cm: new Ext.grid.ColumnModel([{
 	        	header: "名称",dataIndex: 'name',width: 120

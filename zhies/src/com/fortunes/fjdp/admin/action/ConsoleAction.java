@@ -1,6 +1,7 @@
 package com.fortunes.fjdp.admin.action;
 
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 import org.springframework.stereotype.Component;
 
+import com.fortunes.fjdp.AppHelper;
 import com.fortunes.fjdp.admin.model.Config.ConfigKey;
 import com.fortunes.fjdp.admin.model.Employee;
 import com.fortunes.fjdp.admin.model.Organization;
@@ -37,7 +41,9 @@ import com.fortunes.zhies.model.Buyer;
 import com.fortunes.zhies.model.Customer;
 import com.fortunes.zhies.model.CustomsBroker;
 import com.fortunes.zhies.model.Inspection;
+import com.fortunes.zhies.model.Item;
 import com.fortunes.zhies.model.ShipCompany;
+import com.fortunes.zhies.model.Trade;
 import com.fortunes.zhies.model.TruckCompany;
 import com.fortunes.zhies.model.VerificationCompany;
 import com.fortunes.zhies.service.AirCompanyService;
@@ -47,6 +53,7 @@ import com.fortunes.zhies.service.CustomerService;
 import com.fortunes.zhies.service.CustomsBrokerService;
 import com.fortunes.zhies.service.InspectionService;
 import com.fortunes.zhies.service.ShipCompanyService;
+import com.fortunes.zhies.service.TradeService;
 import com.fortunes.zhies.service.TruckCompanyService;
 import com.fortunes.zhies.service.VerificationCompanyService;
 
@@ -76,6 +83,9 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 	@Resource public ShipCompanyService shipCompanyService;
 	@Resource public AirCompanyService airCompanyService;
 	@Resource public BuyerService buyerService;
+	@Resource public TradeService tradeService;
+	
+	@Resource JdbcTemplate jdbcTemplate;
 	
 	public String initDb() throws Exception{
 		AnnotationSessionFactoryBean annotationSessionFactoryBean = 
@@ -202,6 +212,100 @@ public class ConsoleAction extends BaseAction implements ApplicationContextAware
 		dictService.initToDb(new InputStreamReader(
 				this.getClass().getResourceAsStream(DICT_XML_PATH),"utf-8"));
 		return render(jo);
+	}
+	
+	public String convert() throws Exception{
+		SqlRowSet  rs = jdbcTemplate.queryForRowSet("select * from Export");
+		while(rs.next()){
+			long id = rs.getLong("id");
+			System.out.println(id);
+			Trade t = tradeService.get(id+"");
+			
+			//t.setBuyer(AppHelper.toBuyer(rsget(rs,"buyer_id")));
+			t.setCustomsBroker(AppHelper.toCustomsBroker(rsget(rs,"customsBroker_id")));//报关行
+			
+			t.setLoadingCity(rsget(rs,"loadingCity"));//装运口岸
+			t.setLoadingPort(rsget(rs,"loadingPort"));
+			t.setDestination(rsget(rs,"destination"));//目的地
+			t.setDestinationPort(rsget(rs,"destinationPort"));
+			t.setCurrency(AppHelper.toDict(rsget(rs,"currency_id")));
+			t.setCabNo(rsget(rs,"cabNo"));
+			t.setCabType(rsget(rs,"cabType"));
+			//t.setSoNo(rsget(rs,"soNo"));
+			t.setVerificationCompany(AppHelper.toVerificationCompany(rsget(rs,"verificationCompany_id")));
+			t.setVerificationFormNo(rsget(rs,"verificationFormNo"));
+			
+			t.setMark(rsget(rs,"mark"));//唛头
+			t.setContractNo(rsget(rs,"contractNo"));//合同号
+			t.setContractDate(rsgetDate(rs,"contractDate"));//合同日期
+			t.setInvoiceNo(rsget(rs,"invoiceNo"));//发票号
+			t.setInvoiceDate(rsgetDate(rs,"invoiceDate"));//发票日期
+			t.setTradeType(rsget(rs,"tradeType"));//成交方式
+			t.setSignCity(rsget(rs,"signCity"));
+			t.setPayCondition(rsget(rs,"payCondition"));
+			t.setMemos(rsget(rs,"memos"));
+			t.setTaxMemos(rsget(rs,"taxMemos"));
+			t.setItemsCity(rsget(rs,"itemsCity"));
+			
+			t.setGrossWeight(rsgetDouble(rs,"grossWeight"));//毛重KG
+			t.setNetWeight(rsgetDouble(rs,"netWeight"));//净重KG
+			
+			t.setStoragePeriod(rsget(rs,"storagePeriod"));
+			t.setStorageVehicle(rsget(rs,"storageVehicle"));
+			t.setPackageAndModel(rsget(rs,"packageAndModel"));
+			
+			//for 产地证
+			t.setProducerNo(rsget(rs,"producerNo"));//产地证号
+			t.setPackageNumber(rsgetInt(rs,"packageNumber"));//箱数
+			t.setProduceDate(rsgetDate(rs,"produceDate"));//产地日期
+			
+			//for inspection 商检
+			t.setInspection(AppHelper.toInspection(rsget(rs,"inspection_id")));//商检行
+			t.setExportPort(rsget(rs,"exportPort"));//出口口岸
+			t.setInspectionTransType(rsget(rs,"inspectionTransType"));//商检运输方式
+			
+			//for transport
+			t.setTruckCompany(AppHelper.toTruckCompany(rsget(rs,"truckCompany_id")));//拖车公司
+			t.setTransportType(AppHelper.toDict(rsget(rs,"transportType_id")));//运输方式
+			t.setLoadingFactory(rsget(rs,"loadingFactory"));//装载工厂
+			t.setLoadingFactoryAddr(rsget(rs,"loadingFactoryAddr"));//装载工厂地址
+			t.setDeliverPort(rsget(rs,"deliverPort"));//发货港口
+			t.setDriver(rsget(rs,"driver"));//司机
+			t.setDriverPhone(rsget(rs,"driverPhone"));//司机电话
+			t.setTruckLicense(rsget(rs,"truckLicense"));//车牌号
+			
+			t.setShipCompany(AppHelper.toShipCompany(rsget(rs,"shipCompany_id")));
+			t.setAirCompany(AppHelper.toAirCompany(rsget(rs,"airCompany_id")));
+			t.setVolume(rsgetDouble(rs,"volume"));//体积
+			t.setWeight(rsgetDouble(rs,"weight"));//重量
+			t.setLadingBillNo(rsget(rs,"ladingBillNo"));//提单号
+			
+			int totalPackage = 0;
+			for(Item i : t.getItems()){
+				totalPackage += i.getPackageQuantity();
+			}
+			t.setTotalPackage(totalPackage);
+			tradeService.update(t);
+		}
+		return render(jo);
+	}
+	
+	
+
+	private String rsget(SqlRowSet rs,String string) {
+		return rs.getString(string);
+	}
+	
+	private Date rsgetDate(SqlRowSet rs,String string) {
+		return rs.getDate(string);
+	}
+	
+	private int rsgetInt(SqlRowSet rs,String string) {
+		return rs.getInt(string);
+	}
+	
+	private Double rsgetDouble(SqlRowSet rs,String string) {
+		return rs.getDouble(string);
 	}
 
 	@Override
