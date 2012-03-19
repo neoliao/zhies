@@ -60,8 +60,7 @@ public class TradeAction extends GenericAction<Trade> {
 		record.put("code", e.getCode());
 		record.put("createDate", e.getCreateDate());
 		record.put("reportPortDate", e.getReportPortDate());
-		record.put("buyer", e.getBuyer());
-		record.put("buyerName", e.getBuyer().getName());
+		record.put("buyerName", e.getBuyerName());
 		record.put("customer", e.getCustomer());
 		record.put("customerName", e.getCustomer().getName());
 		record.put("sales", e.getSales());
@@ -203,13 +202,13 @@ public class TradeAction extends GenericAction<Trade> {
 			setCell(j++, row,e.getCode());
 			setCell(j++, row, Tools.date2String(e.getCreateDate()));
 			setCell(j++, row, Tools.date2String(((Export)e).getReportPortDate()));
-			setCell(j++, row, e.getBuyer().getName());
+			setCell(j++, row, e.getBuyerName());
 			setCell(j++, row, e.getCustomer().getName());
 			setCell(j++, row, e.getItemDesc());
 			setCell(j++, row, e.getItemQuantity());
 			setCell(j++, row, e.getSales().getDisplayName());
 			setCell(j++, row, e.getOperator().getName());
-			setCell(j++, row, ((Export)e).getLoadingPort());
+			setCell(j++, row, ((Export)e).getLoadingPort().getText());
 			
 			setCell(j++, row, ((Export)e).getVerificationCompany().getName());
 			setCell(j++, row, ((Export)e).getVerificationFormNo());
@@ -251,7 +250,7 @@ public class TradeAction extends GenericAction<Trade> {
 		
 		String title = p("year")+"年"+p("month")+"月"+customer.getName()+"对账单";
 		
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 13));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 14));
 		
 		HSSFCellStyle bigStyle = workbook.createCellStyle();
 		HSSFFont big = workbook.createFont();
@@ -289,9 +288,9 @@ public class TradeAction extends GenericAction<Trade> {
 		for(Trade e : listData.getList()){
 			int j = 0;
 			HSSFRow row = sheet.createRow(i);
-			setCell(j++, row, e.getBuyer().getName());
+			setCell(j++, row, e.getBuyerName());
 			setCell(j++, row, e.getItemDesc());
-			setCell(j++, row, e.getLoadingPort());
+			setCell(j++, row, e.getLoadingPort().getText());
 			setCell(j++, row, e.getCabNo());
 			setCell(j++, row, e.getSoNo());
 			setCell(j++, row, e.getTotalPackage());
@@ -309,8 +308,8 @@ public class TradeAction extends GenericAction<Trade> {
 			i++;
 		}
 		HSSFRow row = sheet.createRow(i);
-		setCell(10, row,  "总计");
-		setCell(11, row,  totalMonth);
+		setCell(13, row,  "总计");
+		setCell(14, row,  totalMonth);
 		workbook.write(temp);
 		byte[] bytes = FileUtil.readAsByteArray(tempFile);
 		return renderFile(bytes, title+".xls");

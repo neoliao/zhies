@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import net.fortunes.core.ListData;
 import net.fortunes.core.log.annotation.LoggerMethod;
+import net.fortunes.exception.DeleteForeignConstrainException;
 import net.fortunes.util.GenericsUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +16,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -54,7 +56,12 @@ public abstract class GenericService<E>{
 	
 	@LoggerMethod(operateName = "删除")
 	public void del(E entity) throws Exception{
-		this.getHt().delete(entity);
+		try {
+			this.getHt().setFlushMode(HibernateTemplate.FLUSH_EAGER);
+			this.getHt().delete(entity);
+		} catch (Exception e) {
+			throw new DeleteForeignConstrainException();
+		}
 	}
 	
 	@LoggerMethod(operateName = "修改")

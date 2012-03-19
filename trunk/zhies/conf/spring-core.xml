@@ -55,11 +55,14 @@
 		      <value>com.fortunes.zhies.model.Trade</value>
 		      <value>com.fortunes.zhies.model.Import</value>
 		      <value>com.fortunes.zhies.model.Export</value>
+		      <value>com.fortunes.zhies.model.ProduceArea</value>
 		      <value>com.fortunes.zhies.model.Item</value>
 		      <value>com.fortunes.zhies.model.Business</value>
 		      <value>com.fortunes.zhies.model.BusinessInstance</value>
 		      <value>com.fortunes.zhies.model.Invoice</value>
 		      <value>com.fortunes.zhies.model.Accounts</value>
+		      
+		      <value>com.fortunes.zhies.model.CodeSequence</value>
 		      
 		      
 		   </list>
@@ -93,9 +96,6 @@
     
     <tx:advice id="txAdvice" transaction-manager="txManager" >
     	<tx:attributes>
-    		<tx:method name="has*" read-only="true"/>
-    		<tx:method name="get*" read-only="true"/>
-    		<tx:method name="load*" read-only="true"/>
     		<tx:method name="*" />
     	</tx:attributes>
     </tx:advice>

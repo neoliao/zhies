@@ -22,7 +22,6 @@ public class BuyerAction extends GenericAction<Buyer> {
 	private BuyerService buyerService;
 	
 	protected void setEntity(Buyer e) throws ParseException{
-		e.setCustomer(AppHelper.toCustomer(p("customer")));
 		e.setName(p("name"));
 		e.setCode(p("code"));
 		e.setAddress(p("address"));
@@ -38,7 +37,6 @@ public class BuyerAction extends GenericAction<Buyer> {
 	protected JSONObject toJsonObject(Buyer e) throws ParseException{
 		AppHelper record = new AppHelper();
 		record.put("id", e.getId());
-		record.put("customer", e.getCustomer());
 		record.put("name", e.getName());
 		record.put("code", e.getCode());
 		record.put("address", e.getAddress());
