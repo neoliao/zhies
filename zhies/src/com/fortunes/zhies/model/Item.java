@@ -15,11 +15,15 @@ public class Item extends Model{
 	
 	private String name;//名称
 	
+	private String productCode;//商品编号
+	
 	private String model;//型号及描述
 	
 	private double price;//单价
 	
 	private double quantity;//数量
+	
+	private double totalPrice;//总价
 	
 	private String unit;//合同单位
 	
@@ -157,6 +161,21 @@ public class Item extends Model{
 	public Trade getTrade() {
 		return trade;
 	}
-	
+
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public String getProductCode() {
+		return productCode;
+	}
 
 }

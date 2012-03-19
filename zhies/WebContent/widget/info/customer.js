@@ -20,6 +20,12 @@ Customer = Ext.extend(Ext.app.BaseFuncPanel,{
 					'name','code','address','email','tel','fax','qq','linkman','linkmanTel','linkmanEmail'
 				]
 			},
+			buttonConfig : [
+				'all','->',{
+					xtype : 'f-search',
+					emptyText : '请输入客户公司或者联系人名称'
+				}
+			],
 			winConfig : {
 				height: 400
 			},

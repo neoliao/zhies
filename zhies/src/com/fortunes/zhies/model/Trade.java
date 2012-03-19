@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.compass.annotations.Cascade;
 
 import net.fortunes.core.Model;
 
@@ -42,6 +45,8 @@ public class Trade extends Model {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;//创建日期
 	
+	private String memo;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endedDate;//结束日期(已收款)
 	
@@ -60,8 +65,10 @@ public class Trade extends Model {
 	@ManyToOne
 	private Customer customer;//客户
 	
-	@ManyToOne
-	private Buyer buyer;
+	/*@ManyToOne
+	private Buyer buyer;*/
+	
+	private String buyerName;
 	
 	private String itemDesc;
 	
@@ -69,10 +76,10 @@ public class Trade extends Model {
 	
 	private String soNo;
 	
-	@OneToMany(mappedBy = "trade")
+	@OneToMany(mappedBy = "trade",cascade = CascadeType.REMOVE)
 	private List<Item> items = new ArrayList<Item>();//货物
 	
-	@OneToMany(mappedBy = "trade")
+	@OneToMany(mappedBy = "trade",cascade = CascadeType.REMOVE)
 	private List<BusinessInstance> businessInstances = new ArrayList<BusinessInstance>();//包含的服务
 	
 	private Double totalSalesPrice;
@@ -97,7 +104,10 @@ public class Trade extends Model {
 	@ManyToOne
 	private CustomsBroker customsBroker;
 	private String loadingCity;//出口地
-	private String loadingPort;//装运口岸/出口口岸
+	
+	@ManyToOne
+	private Dict loadingPort;//装运口岸/出口口岸
+	//private String loadingPort;//装运口岸/出口口岸
 	private String destination;//目的地
 	private String destinationPort;//目的港
 	private String mark;//唛头
@@ -126,6 +136,8 @@ public class Trade extends Model {
 	private Double netWeight;//净重KG
 	
 	//for 产地证
+	@ManyToOne
+	private Dict producerCertificate;
 	private String producerNo;//产地证号
 	private Integer packageNumber;//箱数
 	
@@ -160,6 +172,11 @@ public class Trade extends Model {
 	private ShipCompany shipCompany;
 	@ManyToOne
 	private AirCompany airCompany;
+	
+	private boolean caluateAsTotalPrice;//以总价来计算单价
+	
+	private String otherPrice;
+	
 	public long getId() {
 		return id;
 	}
@@ -214,12 +231,12 @@ public class Trade extends Model {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
-	public Buyer getBuyer() {
+	/*public Buyer getBuyer() {
 		return buyer;
 	}
 	public void setBuyer(Buyer buyer) {
 		this.buyer = buyer;
-	}
+	}*/
 	public String getItemDesc() {
 		return itemDesc;
 	}
@@ -322,12 +339,7 @@ public class Trade extends Model {
 	public void setLoadingCity(String loadingCity) {
 		this.loadingCity = loadingCity;
 	}
-	public String getLoadingPort() {
-		return loadingPort;
-	}
-	public void setLoadingPort(String loadingPort) {
-		this.loadingPort = loadingPort;
-	}
+	
 	public String getDestination() {
 		return destination;
 	}
@@ -549,6 +561,42 @@ public class Trade extends Model {
 	}
 	public void setAirCompany(AirCompany airCompany) {
 		this.airCompany = airCompany;
+	}
+	public void setCaluateAsTotalPrice(boolean caluateAsTotalPrice) {
+		this.caluateAsTotalPrice = caluateAsTotalPrice;
+	}
+	public boolean isCaluateAsTotalPrice() {
+		return caluateAsTotalPrice;
+	}
+	public void setProducerCertificate(Dict producerCertificate) {
+		this.producerCertificate = producerCertificate;
+	}
+	public Dict getProducerCertificate() {
+		return producerCertificate;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setOtherPrice(String otherPrice) {
+		this.otherPrice = otherPrice;
+	}
+	public String getOtherPrice() {
+		return otherPrice;
+	}
+	public void setBuyerName(String buyerName) {
+		this.buyerName = buyerName;
+	}
+	public String getBuyerName() {
+		return buyerName;
+	}
+	public void setLoadingPort(Dict loadingPort) {
+		this.loadingPort = loadingPort;
+	}
+	public Dict getLoadingPort() {
+		return loadingPort;
 	}
 	
 

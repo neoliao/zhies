@@ -18,8 +18,6 @@ import net.fortunes.core.Model;
 @Entity
 public class Buyer extends Company{
 	
-	@ManyToOne
-	private Customer customer;
 	
     public Buyer() {
     }
@@ -33,13 +31,6 @@ public class Buyer extends Company{
 		return "";
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public Customer getCustomer() {
-		return customer;
-	}
     
     /*=============== setter and getter =================*/
     

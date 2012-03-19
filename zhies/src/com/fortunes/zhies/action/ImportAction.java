@@ -55,6 +55,7 @@ public class ImportAction extends GenericAction<Import> {
 	private long[] deletedItemIds;
 	private long[] itemIds;
 	private String[] names;
+	private String[] productCodes;
 	private String[] models;
 	private double[] prices;
 	private double[] quantitys;
@@ -91,7 +92,7 @@ public class ImportAction extends GenericAction<Import> {
 			if(StringUtils.isEmpty(query) 
 					|| c.getCode().matches(".+"+query+".+")
 					|| c.getCustomer().getName().startsWith(query)
-					|| c.getBuyer().getName().startsWith(query)
+					|| c.getBuyerName().startsWith(query)
 					|| c.getItemDesc().startsWith(query)
 					|| c.getItemQuantity().startsWith(query)){
 				JSONObject record = new JSONObject();
@@ -158,9 +159,10 @@ public class ImportAction extends GenericAction<Import> {
 		AppHelper record = new AppHelper();
 		record.put("id", e.getId());
 		record.put("code", e.getCode());
+		record.put("memo", e.getMemo());
 		record.put("reportPortDate", e.getReportPortDate());
 		record.put("createDate", e.getCreateDate());
-		record.put("buyer", e.getBuyer());
+		record.put("buyerName", e.getBuyerName());
 		record.put("loadingCity", e.getLoadingCity());
 		record.put("loadingPort", e.getLoadingPort());
 		record.put("loadingPortCopy", e.getLoadingPort());
@@ -185,11 +187,11 @@ public class ImportAction extends GenericAction<Import> {
 		imports.setDelayFee(pDouble("delayFee"));
 		
 		//for CustomsBroker 报关
-		imports.setBuyer(AppHelper.toBuyer(p("buyer")));
+		imports.setBuyerName(p("buyerName"));
 		imports.setCustomsBroker(AppHelper.toCustomsBroker(p("customsBroker")));//报关行
 		
 		imports.setLoadingCity(p("loadingCity"));//装运口岸
-		imports.setLoadingPort(p("loadingPort"));
+		imports.setLoadingPort(AppHelper.toDict(p("loadingPort")));
 		imports.setDestination(p("destination"));//目的地
 		imports.setDestinationPort(p("destinationPort"));
 		imports.setCurrency(AppHelper.toDict(p("currency")));
@@ -198,6 +200,8 @@ public class ImportAction extends GenericAction<Import> {
 		imports.setSoNo(p("soNo"));
 		imports.setVerificationCompany(AppHelper.toVerificationCompany(p("verificationCompany")));
 		imports.setVerificationFormNo(p("verificationFormNo"));
+		
+		imports.setMemo(p("memo"));
 		
 		imports.setMark(p("mark"));//唛头
 		imports.setContractNo(p("contractNo"));//合同号
@@ -256,6 +260,7 @@ public class ImportAction extends GenericAction<Import> {
 				newItem.setId(itemIds[i]);
 			}
 			newItem.setName(names[i]);
+			newItem.setProductCode(productCodes[i]);
 			newItem.setModel(models[i]);
 			newItem.setPrice(prices[i]);
 			newItem.setQuantity(quantitys[i]);
@@ -366,9 +371,7 @@ public class ImportAction extends GenericAction<Import> {
 			pay.setCompany(AppHelper.toCompany(companyIds[i]+""));
 			accountsList.add(pay);
 			
-			BusinessInstance bi = businessService.getBusinessInstance(businessInstanceIds[i]);
-			bi.setActualCost(mustPayAmounts[i]);
-			businessService.updateInstance(bi);
+			businessService.updateBusinessInstance(businessInstanceIds[i],mustPayAmounts[i]);
 		}
 		double total = 0.0;
 		for(int i = 0 ;i < mustGainAmounts.length ; i++){
@@ -423,16 +426,26 @@ public class ImportAction extends GenericAction<Import> {
 		rightAndTopBorder.setBorderTop(CellStyle.BORDER_THIN);
 		rightAndTopBorder.setBorderRight(CellStyle.BORDER_THIN);
 		
+		HSSFCellStyle rightAndBottomBorder = copy.createCellStyle();
+		rightAndBottomBorder.setBorderBottom(CellStyle.BORDER_THIN);
+		rightAndBottomBorder.setBorderRight(CellStyle.BORDER_THIN);
+		
 		HSSFCellStyle leftAndTopBorder = copy.createCellStyle();
 		leftAndTopBorder.setBorderTop(CellStyle.BORDER_THIN);
 		leftAndTopBorder.setBorderLeft(CellStyle.BORDER_THIN);		
 		
+		HSSFCellStyle fullBorder = copy.createCellStyle();
+		fullBorder.setBorderTop(CellStyle.BORDER_THIN);
+		fullBorder.setBorderLeft(CellStyle.BORDER_THIN);	
+		fullBorder.setBorderBottom(CellStyle.BORDER_THIN);
+		fullBorder.setBorderRight(CellStyle.BORDER_THIN);
+		
 		//==================== sheet 1 =========================
 		HSSFSheet sheet = copy.getSheetAt(0);
-		setCell(sheet,0, 0,imports.getBuyer().getName(),bigStyle);
-		setCell(sheet,2, 1,imports.getBuyer().getAddress());
-		setCell(sheet,2, 2,imports.getBuyer().getTel(),bottomBorder);
-		setCell(sheet,8, 2,imports.getBuyer().getFax(),bottomBorder);
+		setCell(sheet,0, 0,imports.getBuyerName(),bigStyle);
+		//setCell(sheet,2, 1,imports.getBuyer().getAddress());
+		//setCell(sheet,2, 2,imports.getBuyer().getTel(),bottomBorder);
+		//setCell(sheet,8, 2,imports.getBuyer().getFax(),bottomBorder);
 		setCell(sheet,2, 3,Constants.COMPANY_NAME_EN);
 		setCell(sheet,2, 4,Constants.COMPANY_ADDR_EN);
 		setCell(sheet,2, 5,Constants.COMPANY_TEL);
@@ -462,23 +475,23 @@ public class ImportAction extends GenericAction<Import> {
 			setCell(sheet,4, 9+i,item.getQuantity(),leftBorder);
 			setCell(sheet,5, 9+i,item.getUnitForQuantity(),rightBorder);
 			setCell(sheet,6, 9+i,item.getGrossWeight());
-			setCell(sheet,7, 9+i,item.getUnitForWeight());
+			setCell(sheet,7, 9+i,item.getUnitForWeight(),rightBorder);
 			setCell(sheet,8, 9+i,item.getNetWeight());
 			setCell(sheet,9, 9+i,item.getUnitForWeight());
 			i++;
 		}
-		setCell(sheet,6, 9+i,totalGrossWeight);
-		setCell(sheet,7, 9+i,items.get(0).getUnitForWeight());
-		setCell(sheet,8, 9+i,totalNetWeight);
-		setCell(sheet,9, 9+i,items.get(0).getUnitForWeight());
+		setCell(sheet,6, 29,totalGrossWeight,bottomBorder);
+		setCell(sheet,7, 29,items.get(0).getUnitForWeight(),rightAndBottomBorder);
+		setCell(sheet,8, 29,totalNetWeight,bottomBorder);
+		setCell(sheet,9, 29,items.get(0).getUnitForWeight(),bottomBorder);
 		
 		
 		//==================== sheet 2 =========================
 		HSSFSheet sheet2 = copy.getSheetAt(1);
-		setCell(sheet2,0, 0,imports.getBuyer().getName(),bigStyle);
-		setCell(sheet2,2, 1,imports.getBuyer().getAddress());
+		setCell(sheet2,0, 0,imports.getBuyerName(),bigStyle);
+		/*setCell(sheet2,2, 1,imports.getBuyer().getAddress());
 		setCell(sheet2,2, 2,imports.getBuyer().getTel(),bottomBorder);
-		setCell(sheet2,8, 2,imports.getBuyer().getFax(),bottomBorder);
+		setCell(sheet2,8, 2,imports.getBuyer().getFax(),bottomBorder);*/
 		setCell(sheet2,2, 3,Constants.COMPANY_NAME_EN);
 		setCell(sheet2,2, 4,Constants.COMPANY_ADDR_EN);
 		setCell(sheet2,2, 5,Constants.COMPANY_TEL);
@@ -493,57 +506,64 @@ public class ImportAction extends GenericAction<Import> {
 			setCell(sheet2,1, 9+i,item.getName(),leftBorder); 
 			setCell(sheet2,4, 9+i,item.getQuantity(),leftBorder);
 			setCell(sheet2,5, 9+i,item.getUnitForQuantity(),rightBorder);
-			setCell(sheet2,6, 9+i,item.getPrice());
-			setCell(sheet2,7, 9+i,imports.getCurrency().getText());
-			setCell(sheet2,8, 9+i,total);
-			setCell(sheet2,7, 9+i,imports.getCurrency().getText());
+			setCell(sheet2,6, 9+i,imports.getCurrency()==null?"":imports.getCurrency().getText());
+			setCell(sheet2,7, 9+i,item.getPrice(),rightBorder);
+			setCell(sheet2,9, 9+i,imports.getCurrency()==null?"":imports.getCurrency().getText(),leftBorder);
+			setCell(sheet2,10, 9+i,total,rightBorder);
 			i++;
 		}
 
-		setCell(sheet2,8, 9+i,totalMoney);
-		setCell(sheet2,9, 9+i,imports.getCurrency().getText());
+		setCell(sheet2,9, 29,imports.getCurrency()==null?"":imports.getCurrency().getText());
+		setCell(sheet2,10, 29,totalMoney);
 		
 		
-		/*//==================== sheet 3 =========================
+		//==================== sheet 3 =========================
 		HSSFSheet sheet3 = copy.getSheetAt(2);
-		setCell(sheet3,3, 8,Constants.COMPANY_NAME);
-		setCell(sheet3,3, 9,Constants.COMPANY_NAME_EN);
-		setCell(sheet3,3, 10,imports.getBuyer().getName());
-		setCell(sheet3,9, 8,AppHelper.toDateString(imports.getInvoiceDate()));
-		setCell(sheet3,9, 9,imports.getInvoiceNo());
-		setCell(sheet3,9, 10,imports.getContractNo());
-		setCell(sheet3,9, 11,imports.getPayCondition());
+		setCell(sheet3,1, 2,imports.getContractNo());
+		setCell(sheet3,6, 2,AppHelper.toDateString(imports.getInvoiceDate()));
+		setCell(sheet3,10, 2, imports.getSignCity());
+		setCell(sheet3,1, 3,Constants.COMPANY_NAME);
+		setCell(sheet3,1, 4,Constants.COMPANY_ADDR);
+		setCell(sheet3,10, 3, Constants.COMPANY_TEL);
+		setCell(sheet3,10, 4, Constants.COMPANY_FAX);
+		
+		setCell(sheet3,1, 6,imports.getBuyerName());
+		/*setCell(sheet3,1, 7,imports.getBuyer().getAddress());
+		setCell(sheet3,10, 6,imports.getBuyer().getTel());
+		setCell(sheet3,10, 7,imports.getBuyer().getFax());*/
 		
 		i = 0;
 		for(Item item:items){
-			
-			setCell(sheet3,3, 15+i,item.getName()); 
-			setCell(sheet3,6, 15+i,item.getPackageQuantity(),leftBorder);
-			setCell(sheet3,7, 15+i,"箱",rightBorder);
-			setCell(sheet3,8, 15+i,item.getUnitQuantity(),leftBorder);
-			setCell(sheet3,9, 15+i,item.getUnitForQuantity(),rightBorder);
-			setCell(sheet3,10, 15+i,item.getGrossWeight(),leftBorder);
-			setCell(sheet3,11, 15+i,item.getUnitForWeight(),rightBorder);
-			setCell(sheet3,12, 15+i,item.getNetWeight(),leftBorder);
-			setCell(sheet3,13, 15+i,item.getUnitForWeight(),rightBorder);
+			double total = item.getPrice()*item.getQuantity();
+			setCell(sheet3,2, 13+i,item.getName(),leftBorder); 
+			setCell(sheet3,6, 13+i,item.getUnit(),rightBorder);
+			setCell(sheet3,7, 13+i,item.getQuantity());
+			setCell(sheet3,9, 13+i,item.getPrice());
+			setCell(sheet3,10, 9+i,imports.getCurrency()==null?"":imports.getCurrency().getText());
+			setCell(sheet3,11, 13+i,total,rightBorder);
 			i++;
 		}
-		setCell(sheet3,6, 40,totalPackage,leftAndTopBorder);
-		setCell(sheet3,7, 40,"箱",rightAndTopBorder);
-		setCell(sheet3,8, 40,totalUnitQuantity,leftAndTopBorder);
-		setCell(sheet3,9, 40,items.get(0).getUnitForQuantity(),rightAndTopBorder);
-		setCell(sheet3,10, 40,totalGrossWeight,leftAndTopBorder);
-		setCell(sheet3,11, 40,items.get(0).getUnitForWeight(),rightAndTopBorder);
-		setCell(sheet3,12, 40,totalNetWeight,leftAndTopBorder);
-		setCell(sheet3,13, 40,items.get(0).getUnitForWeight(),rightAndTopBorder);
-
+		setCell(sheet3,6, 33,imports.getCurrency()==null?"":imports.getCurrency().getDescription(),fullBorder);
+		setCell(sheet3,7, 33,MoneyUtil.toChinese(totalMoney+""),fullBorder);
+		setCell(sheet3,10, 33,imports.getCurrency()==null?"":imports.getCurrency().getText(),fullBorder);
+		setCell(sheet3,11, 33,totalMoney,fullBorder);
+		
+		setCell(sheet3,3, 35,imports.getTradeType());
+		setCell(sheet3,3, 36,"");//制作地
+		setCell(sheet3,3, 37,imports.getPackageAndModel());
+		setCell(sheet3,9, 37,imports.getMark());
+		setCell(sheet3,3, 38,imports.getLoadingCity());
+		setCell(sheet3,9, 38,imports.getDestinationPort());
 		
 		//==================== sheet 4 =========================
 		HSSFSheet sheet4 = copy.getSheetAt(3);
-		setCell(sheet4,1, 3,imports.getLoadingPort(),leftBorder);
+		setCell(sheet4,3, 0,imports.getOperator().getEmployee().getName());
+		setCell(sheet4,6, 0,imports.getOperator().getEmployee().getMobile());
+		
+		setCell(sheet4,1, 3,imports.getLoadingPort()==null?"":imports.getLoadingPort().getText(),leftBorder);
 		setCell(sheet4,1, 5,Constants.COMPANY_NAME,leftBorder);
 		setCell(sheet4,1, 7,Constants.COMPANY_CUSTOME_CODE,leftBorder);
-		setCell(sheet4,11, 7,imports.getPayCondition());
+		//setCell(sheet4,11, 7,imports.getPayCondition());
 		setCell(sheet4,11, 9,imports.getItemsCity());
 		setCell(sheet4,4, 9,imports.getDestination());
 		setCell(sheet4,7, 9,imports.getDestinationPort());
@@ -554,48 +574,25 @@ public class ImportAction extends GenericAction<Import> {
 		setCell(sheet4,8, 13,totalGrossWeight);
 		setCell(sheet4,11, 13,totalNetWeight);
 		
-		setCell(sheet4,1, 17,imports.getMemos(),leftAndRightBorder);
-		setCell(sheet4,1, 61,imports.getOperator().getEmployee().getName()
-				+" "+imports.getOperator().getEmployee().getMobile(),leftAndRightBorder);
-		
 		i = 0;
 		for(Item item:items){
 			double total = item.getPrice()*item.getQuantity();
-			setCell(sheet4,3, 20+i,item.getName()); 
-			setCell(sheet4,3, 21+i,item.getModel()); 
+			setCell(sheet4,2, 19+i,item.getProductCode()); 
+			setCell(sheet4,3, 19+i,item.getName()+"/"+item.getModel()); 
 
-			setCell(sheet4,6, 20+i,item.getQuantity());
-			setCell(sheet4,7, 20+i,item.getUnit());
-			setCell(sheet4,10, 20+i,imports.getDestination());
-			setCell(sheet4,11, 20+i,item.getPrice());
-			setCell(sheet4,12, 20+i,total,rightBorder);
-			i += 2;
+			setCell(sheet4,6, 19+i,item.getQuantity());
+			setCell(sheet4,7, 19+i,item.getUnit());
+			setCell(sheet4,10, 19+i,imports.getDestination());
+			setCell(sheet4,11, 19+i,item.getPrice());
+			setCell(sheet4,12, 19+i,total,rightBorder);
+			i++;
 		}
-		
-		//==================== sheet 5 =========================
-		HSSFSheet sheet5 = copy.getSheetAt(4);
-		setCell(sheet5,2, 10,itemDesc);
-		setCell(sheet5,2, 12,imports.getItemsCity());
-		setCell(sheet5,2, 14,imports.getPackageAndModel());
-		setCell(sheet5,2, 16,totalPackage);
-		setCell(sheet5,2, 18,totalGrossWeight);
-		setCell(sheet5,2, 20,totalMoney);
-		setCell(sheet5,3, 16,"箱");
-		setCell(sheet5,3, 18,items.get(0).getUnit());
-		setCell(sheet5,3, 20,imports.getCurrency().getText());
-		
-		setCell(sheet5,2, 22,imports.getStorageVehicle());
-		setCell(sheet5,2, 24,imports.getLoadingPort());
-		setCell(sheet5,2, 26,imports.getStoragePeriod());
-		setCell(sheet5,2, 32,Constants.COMPANY_ADDR);
-		setCell(sheet5,2, 34,Constants.COMPANY_TEL);
-		setCell(sheet5,2, 36,Constants.COMPANY_FAX);
-		setCell(sheet5,6, 36,Tools.getDateString());*/
+		setCell(sheet4,12, 39,totalMoney,rightAndBottomBorder);
 		
 		copy.write(temp);		
 		
 		byte[] bytes = FileUtil.readAsByteArray(tempFile);
-		return renderFile(bytes, imports.getCode()+"-出口单证.xls");
+		return renderFile(bytes, imports.getCode()+"-进口单证.xls");
 		
 	}
 	
@@ -637,11 +634,11 @@ public class ImportAction extends GenericAction<Import> {
 			imports.setSales(authedUser);
 		}
 		
-		imports.setBuyer(AppHelper.toBuyer(p("buyer")));
+		imports.setBuyerName(p("buyerName"));
 		imports.setCustomer(AppHelper.toCustomer(p("customer")));
 		imports.setSoNo(p("soNo"));
 		imports.setLoadingCity(p("loadingCity"));
-		imports.setLoadingPort(p("loadingPort"));
+		imports.setLoadingPort(AppHelper.toDict(p("loadingPort")));
 		imports.setDestination(p("destination"));
 		imports.setDestinationPort(p("destinationPort"));
 		imports.setCurrency(AppHelper.toDict(p("currency")));
@@ -650,6 +647,8 @@ public class ImportAction extends GenericAction<Import> {
 		imports.setCabType(p("cabType"));
 		imports.setItemDesc(p("itemDesc"));
 		imports.setItemQuantity(p("itemQuantity"));
+		imports.setMemo(p("memo"));
+		imports.setOtherPrice(p("otherPrice"));
 		
 		for(String code : codes){
 			String checkedValue = p("checkedBusiness_"+code);
@@ -667,10 +666,12 @@ public class ImportAction extends GenericAction<Import> {
 		AppHelper record = new AppHelper();
 		record.put("id", e.getId());
 		record.put("code", e.getCode());
+		record.put("memo", e.getMemo());
+		record.put("otherPrice", e.getOtherPrice());
 		record.put("reportPortDate", e.getReportPortDate());
 		record.put("createDate", e.getCreateDate());
 		record.put("customer", e.getCustomer());
-		record.put("buyer", e.getBuyer());
+		record.put("buyerName", e.getBuyerName());
 		record.put("loadingCity", e.getLoadingCity());
 		record.put("loadingPort", e.getLoadingPort());
 		record.put("loadingPortCopy", e.getLoadingPort());
@@ -753,6 +754,7 @@ public class ImportAction extends GenericAction<Import> {
 			JSONObject itemJson = new JSONObject();
 			itemJson.put("itemId", i.getId());
 			itemJson.put("name", i.getName());
+			itemJson.put("productCode", i.getProductCode());
 			itemJson.put("model", i.getModel());
 			itemJson.put("price", i.getPrice());
 			itemJson.put("quantity", i.getQuantity());
@@ -943,6 +945,14 @@ public class ImportAction extends GenericAction<Import> {
 
 	public String[] getUnitForWeights() {
 		return unitForWeights;
+	}
+
+	public void setProductCodes(String[] productCodes) {
+		this.productCodes = productCodes;
+	}
+
+	public String[] getProductCodes() {
+		return productCodes;
 	}
 
 }

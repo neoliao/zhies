@@ -29,18 +29,16 @@ public class ImportService extends GenericService<Import> {
 	
 	@Resource private UserService userService;
 	@Resource private BuyerService buyerService;
+	@Resource private CodeSequenceService codeSequenceService;
 	
 	@Override
 	protected DetachedCriteria getConditions(String query,
 			Map<String, String> queryMap) {
 		DetachedCriteria criteria = super.getConditions(query, queryMap);
-		criteria.createAlias("customer", "c");
-		
 
 		if(StringUtils.isNotEmpty(queryMap.get("userId"))){
 			User user = userService.get(queryMap.get("userId"));
-			if(!userService.ownRole(user, "operator") && 
-					(userService.ownRole(user, "sales") || userService.ownRole(user, "operator"))){
+			if(!(userService.ownRole(user, "manager") || userService.ownRole(user, "financials"))){
 				criteria.add(Restrictions.or(
 					Restrictions.eq("sales", user),
 					Restrictions.eq("operator", user)
@@ -48,9 +46,18 @@ public class ImportService extends GenericService<Import> {
 			}
 		}
 		if(StringUtils.isNotEmpty(query)){
+			criteria.createAlias("customer", "c");
+			criteria.createAlias("loadingPort", "p",DetachedCriteria.LEFT_JOIN);
+			
 			criteria.add(Restrictions.or(
-			    Restrictions.ilike("code", query, MatchMode.ANYWHERE),
-			    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+				Restrictions.or(
+				    Restrictions.ilike("itemDesc", query, MatchMode.ANYWHERE),
+				    Restrictions.ilike("p.text", query, MatchMode.ANYWHERE)
+				),
+				Restrictions.or(
+				    Restrictions.ilike("code", query, MatchMode.ANYWHERE),
+				    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+				)
 			));
 		}
 		criteria.addOrder(Order.desc("createDate"));
@@ -62,6 +69,8 @@ public class ImportService extends GenericService<Import> {
 
 	public void createImportInstance(Import imports,
 			List<BusinessInstance> busis) throws Exception {
+		
+		imports.setCode(nextImportCode(imports));
 		add(imports);
 		
 		for(BusinessInstance b : busis){
@@ -69,7 +78,7 @@ public class ImportService extends GenericService<Import> {
 			this.getHt().save(b);
 		}
 		
-		imports.setCode(getImportCode(imports));
+		
 		
 	}
 	
@@ -85,10 +94,10 @@ public class ImportService extends GenericService<Import> {
 		
 	}
 	
-	private String getImportCode(Import imports){
+	private String nextImportCode(Import imports){
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
-		this.getHt().refresh(imports);
-		return "I-"+imports.getCustomer().getCode()+"-"+format.format(imports.getCreateDate())+"-"+imports.getId();
+		long v = codeSequenceService.nextImportSequence();
+		return "I-"+format.format(imports.getCreateDate())+"-"+v;
 	}
 
 	public void updateOperator(Import imports, List<Item> items,long[] deletedItemIds) {
@@ -146,6 +155,7 @@ public class ImportService extends GenericService<Import> {
 		
 		//retail data
 		fromImport.setId(toImport.getId());
+		fromImport.setCode(toImport.getCode());
 		fromImport.setCreateDate(toImport.getCreateDate());
 		fromImport.setFinishDate(toImport.getFinishDate());
 		fromImport.setEndedDate(toImport.getEndedDate());

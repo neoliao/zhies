@@ -20,5 +20,11 @@ public class BusinessService extends GenericService<Business> {
 	public void updateInstance(BusinessInstance bi) {
 		getHt().update(bi);
 	}
+
+	public void updateBusinessInstance(long businessInstanceId, double mustPayAmount) {
+		BusinessInstance bi = this.getBusinessInstance(businessInstanceId);
+		bi.setActualCost(mustPayAmount);
+		this.updateInstance(bi);
+	}
 	
 }

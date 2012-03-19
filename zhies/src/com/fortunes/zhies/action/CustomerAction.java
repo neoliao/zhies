@@ -57,11 +57,11 @@ public class CustomerAction extends GenericAction<Customer> {
 		JSONArray ja = new JSONArray();
 		for(Customer c:list){
 			String namePy = PinYin.toPinYinString(c.getName());
-			if(StringUtils.isEmpty(query) || namePy.startsWith(getQuery().toUpperCase())
-					|| c.getName().startsWith(getQuery())){
+			if(StringUtils.isEmpty(query) || namePy.indexOf(getQuery().toUpperCase()) > -1
+					|| c.getName().indexOf(getQuery().toUpperCase()) > -1){
 				JSONObject record = new JSONObject();
 				record.put("id", c.getId());
-				record.put("text", c.getName());
+				record.put("text", c.getCode());
 				record.put("pinyin", namePy);
 				ja.add(record);
 			}	

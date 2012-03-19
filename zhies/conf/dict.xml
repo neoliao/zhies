@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dicts>
 
+	<dict key="port" text="口岸">
+		<dict key="01" text="盐田港"/>
+		<dict key="02" text="蛇口港"/>
+		<dict key="03" text="皇岗"/>
+		<dict key="04" text="文锦渡"/>
+	</dict>
+
 	<dict key="sex" text="性别">
 		<dict key="01" text="男"/>
 		<dict key="02" text="女"/>
@@ -87,6 +94,20 @@
 	<dict key="bankAccount" text="银行账号">
 		<dict key="01" text="建行"/>
 		<dict key="02" text="工行"/>
+	</dict>
+	
+	<dict key="producerCertificate" text="产地证类型">
+		<dict key="01" text="FP-中国巴基斯坦自由贸易区"/>
+		<dict key="02" text="FB亚太贸易协定"/>
+		<dict key="03" text="FA普惠制"/>
+		<dict key="04" text="FE中国东盟自由贸易区优惠关税"/>
+		<dict key="05" text="FF中国-智利自由贸易区"/>
+		<dict key="06" text="FX中国-新加坡"/>
+		<dict key="07" text="FN中国-新西兰"/>
+		<dict key="08" text="FR中国-秘鲁"/>
+		<dict key="09" text="CO一般原产地证"/>
+		<dict key="10" text="证明书"/>
+		<dict key="11" text="使馆加签"/>
 	</dict>
 	
 

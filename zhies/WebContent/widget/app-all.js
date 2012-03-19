@@ -95,10 +95,12 @@ ItemsGrid = Ext.extend(Ext.grid.EditorGridPanel,{
     	
     	this.FieldItem = Ext.data.Record.create([
            {name: 'name'},
+           {name: 'productCode'},
            {name: 'model'},
            {name: 'price'},
            {name: 'quantity'},
            {name: 'unit'},
+           {name: 'totalPrice'},
            {name: 'packageQuantity'},
            {name: 'unitQuantity'},
            {name: 'unitForQuantity'},
@@ -118,18 +120,23 @@ ItemsGrid = Ext.extend(Ext.grid.EditorGridPanel,{
 	        	header: "名称",dataIndex: 'name',width: 150,
 	        	editor: new Ext.app.TextField({allowBlank: false})
 	        },{
+	        	header: "商品编号",dataIndex: 'productCode',width: 150,
+	        	editor: new Ext.app.TextField({allowBlank: false})
+	        },{
 	        	header: "型号及描述",dataIndex: 'model',width: 150,
 	        	editor: new Ext.app.TextField({allowBlank: false})
-	        },
-	        {
-	        	header: "单价",dataIndex: 'price',width: 80,
-	        	editor: new Ext.form.NumberField({allowBlank: false})
+	        },{
+	        	header: "单价",dataIndex: 'price',width: 100,
+	        	editor: new Ext.form.NumberField({decimalPrecision:6,allowBlank: false})
 	        },{
 	        	header: "合同数量",dataIndex: 'quantity',width: 80,
 	        	editor: new Ext.form.NumberField({allowBlank: false})
 	        },{
 	        	header: "单位",dataIndex: 'unit',width: 80,
 	        	editor: new Ext.form.TextField({allowBlank: false})
+	        },{
+	        	header: "总价",dataIndex: 'totalPrice',width: 80,
+	        	editor: new Ext.form.NumberField({decimalPrecision:6,allowBlank: false})
 	        },{
 	        	header: "箱数",dataIndex: 'packageQuantity',width: 80,
 	        	editor: new Ext.form.NumberField({allowBlank: false})

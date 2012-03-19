@@ -5,14 +5,36 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 	initComponent : function(){
 		var statusRenderer = function(v){
 			var map = {
-				'CREATED' : '新建业务',
-				'ASSIGNED' : '已分配操作员',
-				'OPERATOR_SAVED' : '操作已保存',
-				'OPERATOR_SUBMITED' : '操作已提交',
-				'COST_CONFIRMED' : '应收应付已确认',
-				'FINISHED' : '完成'
+				'CREATED' : { t: '新建业务',c:'green'},
+				'ASSIGNED' : { t: '已分配操作员',c:'green'},
+				'OPERATOR_SAVED' : { t: '操作已保存',c:'green'},
+				'OPERATOR_SUBMITED': { t:  '操作已提交',c:'red'},
+				'COST_CONFIRMED' : { t: '应收应付已确认',c:'red'},
+				'FINISHED' :{ t:  '完成',c:'red'}
 			};	 
-			return String.format('<span >{0}</span>',map[v]);
+			return String.format('<span style="color:{0}">{1}</span>',map[v].c,map[v].t);
+		};
+		
+		var checkConfirm = {
+			blur : function(f){
+				var v = f.getValue();
+				var code = f.id.split('_')[1];
+				var checkBox = Ext.getCmp('checkedBusiness_'+code);
+				if((v || v === 0) && !checkBox.getValue()){
+					checkBox.setValue(true);
+				}
+			}
+		};
+		
+		var checkValidate = {
+			check : function(f){
+				var checked = f.getValue();
+				var code = f.id.split('_')[1];
+				if(!checked){
+					Ext.getCmp('cost_'+code).reset();
+					Ext.getCmp('salesPrice_'+code).reset();
+				}
+			}
 		};
 		
 		Ext.apply(this,{
@@ -23,19 +45,19 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 					{header: '报关日期',dataIndex:'reportPortDate'},
 					{header: '业务编号',dataIndex:'code'},
 					{header: '客户',dataIndex:'customer',renderer:dictRenderer},
-					{header: '买方',dataIndex:'buyer',renderer:dictRenderer},
+					{header: '口岸',dataIndex:'loadingPort',renderer:dictRenderer},
 					{header: '货物描述',dataIndex:'itemDesc'},
 					{header: '状态',dataIndex:'status',renderer:statusRenderer},
 					{header: '业务员',dataIndex:'sales',renderer:dictRenderer},
 					{header: '操作员',dataIndex:'operator',renderer:dictRenderer}
 				]),	
 				storeMapping:[
-					'reportPortDate','code','createDate','customer','buyer','itemDesc',
-					'status','sales','operator','itemQuantity'
+					'reportPortDate','code','createDate','customer','buyer','itemDesc','buyerName','loadingPort',
+					'status','sales','operator','itemQuantity','memo','otherPrice'
 				]
 			},
 			winConfig : {
-				height: 470,
+				height: 540,
 				width: 800,
 				title : '业务新增或修改',
 				desc : '业务员新增或者修改业务内容',
@@ -91,7 +113,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 					handler : this.viewTrade
 				},'->',{
 					xtype : 'f-search',
-					emptyText : '请输入业务编号或者客户名称'
+					emptyText : '业务编号,客户名称,货物描述,口岸...'
 				}
 			],
 			formConfig:{
@@ -102,12 +124,13 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 						items: [
 							{ xtype: 'fieldset',title: '基本信息',items:[
 								{ xtype: 'f-customer',fieldLabel: '客户',hiddenName: 'customer',id:'importCustomer',allowBlank: false},
-								{ xtype: 'f-buyer',fieldLabel: '买方',hiddenName: 'buyer',id:'importBuyer'},
+								//{ xtype: 'f-buyer',fieldLabel: '卖方',hiddenName: 'buyer',id:'importBuyer'},
+								{ xtype: 'f-text',fieldLabel: '卖方',name: 'buyerName',id:'importBuyer'},
 								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '进口地',
 								    items: [
 								        {xtype : 'f-text',name: 'loadingCity',value:'深圳',width: 84},
 								        {xtype : 'displayfield',value: '进口口岸:'},
-								        { xtype: 'f-text',name: 'loadingPort',width: 84}
+								        { xtype: 'f-dict',hiddenName: 'loadingPort',width: 84,kind:'port'}
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '出口地',
 								    items: [
@@ -118,16 +141,13 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 								},
 								{ xtype: 'f-dict',fieldLabel: '结算币种',hiddenName: 'currency',kind:'currency'},
 								{ xtype: 'f-date',fieldLabel: '报关日期',name: 'reportPortDate'},
-								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '柜号',
-								    items: [
-								        {xtype : 'f-text',name: 'cabNo',width: 84},
-								        {xtype : 'displayfield',value: '　　柜型:'},
-								        { xtype: 'f-text',name: 'cabType',width: 84}
-								    ]
-								},
+								{ xtype: 'f-text',fieldLabel: '柜号',name: 'cabNo'},
+								{ xtype: 'f-text',fieldLabel: '柜型',name: 'cabType'},
 								{xtype : 'f-text',fieldLabel: 'SO号码',name: 'soNo'},
 								{xtype : 'f-text',fieldLabel: '货物描述',name: 'itemDesc',allowBlank: false},
-								{xtype : 'f-text',fieldLabel: '货物大概数量',name: 'itemQuantity'}
+								{xtype : 'f-text',fieldLabel: '货物大概数量',name: 'itemQuantity',allowBlank: false},
+								{xtype : 'f-textarea',fieldLabel: '备注',name: 'memo'}
+								
 								
 							]}
 							
@@ -138,71 +158,70 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 							{ xtype: 'fieldset',title: '服务内容',items:[
 								{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'A.报关服务',name:'checkedBusiness_A',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'A.报关服务',name:'checkedBusiness_A',id:'checkedBusiness_A',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_A'},
+								        {xtype : 'f-number',width: 60,name:'cost_A',id:'cost_A',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_A'}
+								        {xtype : 'f-number',width: 60,name:'salesPrice_A',id:'salesPrice_A',listeners:checkConfirm}
 								        
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'B.单证制作',name:'checkedBusiness_B',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'B.单证制作',name:'checkedBusiness_B',id:'checkedBusiness_B',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_B'},
+								        {xtype : 'f-number',width: 60,name:'cost_B',id:'cost_B',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_B'}
+								        {xtype : 'f-number',width: 60,name:'salesPrice_B',id:'salesPrice_B',listeners:checkConfirm}
 								        
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'D.商检',name:'checkedBusiness_D',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'D.商检',name:'checkedBusiness_D',id:'checkedBusiness_D',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_D'},
+								        {xtype : 'f-number',width: 60,name:'cost_D',id:'cost_D',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_D'}
+								        {xtype : 'f-number',width: 60,name:'salesPrice_D',id:'salesPrice_D',listeners:checkConfirm}
 								        
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'E.拖车运输',name:'checkedBusiness_E',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'E.拖车运输',name:'checkedBusiness_E',id:'checkedBusiness_E',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_E'},
+								        {xtype : 'f-number',width: 60,name:'cost_E',id:'cost_E',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_E'}
+								        {xtype : 'f-number',width: 60,name:'salesPrice_E',id:'salesPrice_E',listeners:checkConfirm}
 								        
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'F.国际运输',name:'checkedBusiness_F',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'F.国际运输',name:'checkedBusiness_F',id:'checkedBusiness_F',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_F'},
+								        {xtype : 'f-number',width: 60,name:'cost_F',id:'cost_F',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_F'}
+								        {xtype : 'f-number',width: 60,name:'salesPrice_F',id:'salesPrice_F',listeners:checkConfirm}
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'G.港建费',name:'checkedBusiness_G',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'G.港建费',name:'checkedBusiness_G',id:'checkedBusiness_G',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_G'},
+								        {xtype : 'f-number',width: 60,name:'cost_G',id:'cost_G',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_G'}
+								        {xtype : 'f-number',width: 60,name:'salesPrice_G',id:'salesPrice_G',listeners:checkConfirm}
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'H.代交关税',name:'checkedBusiness_H',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'H.代交关税',name:'checkedBusiness_H',id:'checkedBusiness_H',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_H'},
+								        {xtype : 'f-number',width: 60,name:'cost_H',id:'cost_H',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_H'}
-								        
+								        {xtype : 'f-number',width: 60,name:'salesPrice_H',id:'salesPrice_H',listeners:checkConfirm}
 								    ]
 								}
 								/*,{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
 								     	{xtype : 'displayfield',value: '增值税'},
 								     	{xtype : 'f-number',width: 60,name:'valueAddedTax'},
-								        {xtype : 'displayfield',value: '消费税'},
+								        {xtype : 'displayfield',value: '关税'},
 								        {xtype : 'f-number',width: 60,name:'consumeTax'},
 								        {xtype : 'displayfield',value: '滞纳金'},
 								        {xtype : 'f-number',width: 60,name:'delayFee'}
@@ -211,13 +230,13 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 								}*/
 								,{ xtype: 'compositefield',labelWidth: 20,
 								    items: [
-								        {xtype : 'checkbox',fieldLabel: 'Z.其它费用',name:'checkedBusiness_Z',width: 20},
+								        {xtype : 'checkbox',fieldLabel: 'Z.其它费用',name:'checkedBusiness_Z',id:'checkedBusiness_Z',listeners:checkValidate,width: 20},
 								        {xtype : 'displayfield',value: '成本价'},
-								        {xtype : 'f-number',width: 60,name:'cost_Z'},
+								        {xtype : 'f-number',width: 60,name:'cost_Z',id:'cost_Z',listeners:checkConfirm},
 								        {xtype : 'displayfield',value: '销售价'},
-								        {xtype : 'f-number',width: 60,name:'salesPrice_Z'}
+								        {xtype : 'f-number',width: 60,name:'salesPrice_Z',id:'salesPrice_Z',listeners:checkConfirm}
 								    ]
-								}
+								},{xtype : 'f-textarea',name:'otherPrice',fieldLabel: '其它费用内容'}
 							]}
 						]
 					}]
@@ -252,6 +271,9 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 		});
 		this.addBt.show();
 		
+		if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
+			Ext.getCmp('viewTrade-Bt').show();
+		}
 		
 		if(record.data.status == 'CREATED'){
 			if(record.data.sales.text == loginUser.userName){
@@ -259,7 +281,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				this.editBt.show();
 				Ext.getCmp('assign-Bt').show();
 			}
-			if(loginUser.ownRole('manager')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
 				Ext.getCmp('assign-Bt').show();
 				this.delBt.show();
 				this.editBt.show();
@@ -273,7 +295,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 			if(record.data.operator.text == loginUser.userName){
 				Ext.getCmp('operator-Bt').show();
 			}
-			if(loginUser.ownRole('manager')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
 				Ext.getCmp('assign-Bt').show();
 				this.delBt.show();
 				this.editBt.show();
@@ -289,7 +311,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('operator_submit-Bt').show();
 			}
-			if(loginUser.ownRole('manager')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
 				Ext.getCmp('assign-Bt').show();
 				this.delBt.show();
 				this.editBt.show();
@@ -304,7 +326,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				Ext.getCmp('operator-Bt').show();
 				Ext.getCmp('import_file-Bt').show();
 			}
-			if(loginUser.ownRole('manager')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
 				Ext.getCmp('assign-Bt').show();
 				Ext.getCmp('accounts_submit-Bt').show();
 				this.delBt.show();
@@ -319,7 +341,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
-			if(loginUser.ownRole('manager')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
 				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
@@ -332,7 +354,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
-			if(loginUser.ownRole('manager')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
 				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
@@ -360,13 +382,13 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 						columnWidth:.5,layout: 'form',border: false,
 						items: [
 							{ xtype: 'fieldset',title: 'A.报关',items:[
-								{ xtype: 'f-buyer',fieldLabel: '买方',hiddenName: 'buyer',allowBlank:false},
+								{ xtype: 'f-text',fieldLabel: '买方',name: 'buyerName'},
 								{ xtype: 'f-customsbroker',fieldLabel: '报关行',hiddenName: 'customsBroker'},
 								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '出口地',
 								    items: [
 								        {xtype : 'f-text',name: 'loadingCity',value:'深圳',width: 84},
 								        {xtype : 'displayfield',value: '出口口岸:'},
-								        { xtype: 'f-text',name: 'loadingPort',width: 84}
+								        { xtype: 'f-dict',hiddenName: 'loadingPort',width: 84,kind:'port'}
 								    ]
 								},{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '目的地',
 								    items: [
@@ -375,21 +397,16 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 								        { xtype: 'f-text',name: 'destinationPort',width: 84}
 								    ]
 								},
-								{ xtype: 'f-dict',fieldLabel: '结算币种',hiddenName: 'currency',kind:'currency',allowBlank:false},
+								{ xtype: 'f-dict',fieldLabel: '结算币种',hiddenName: 'currency',kind:'currency'},
 								{ xtype: 'f-date',fieldLabel: '报关日期',name: 'reportPortDate'},
-								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '柜号',
-								    items: [
-								        {xtype : 'f-text',name: 'cabNo',width: 84},
-								        {xtype : 'displayfield',value: '　　柜型:'},
-								        { xtype: 'f-text',name: 'cabType',width: 84}
-								    ]
-								},
+								{ xtype: 'f-text',fieldLabel: '柜号',name: 'cabNo'},
+								{ xtype: 'f-text',fieldLabel: '柜型',name: 'cabType'},
 								{xtype : 'f-text',fieldLabel: 'SO号码',name: 'soNo'}
 								
 							]},
 							{ xtype: 'fieldset',title: 'B.单证制作',items:[
-								{ xtype: 'f-verificationcompany',fieldLabel: '核销单公司',hiddenName: 'verificationCompany'},
-								{ xtype: 'f-text',fieldLabel: '核销单号',name: 'verificationFormNo'},
+								{ xtype: 'f-verificationcompany',fieldLabel: '经营单位',hiddenName: 'verificationCompany'},
+								{ xtype: 'f-text',fieldLabel: '收货单位',name: 'verificationFormNo'},
 								{ xtype: 'f-text',fieldLabel: '唛头',name: 'mark',value:'纸箱'},
 								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '合同号',
 								    items: [
@@ -413,7 +430,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 							]},
 							{ xtype: 'fieldset',title: 'H.代交关税',items:[
 								{ xtype: 'f-number',fieldLabel: '增值税',name: 'valueAddedTax'},
-								{ xtype: 'f-number',fieldLabel: '消费税',name: 'consumeTax'},
+								{ xtype: 'f-number',fieldLabel: '关税',name: 'consumeTax'},
 								{ xtype: 'f-number',fieldLabel: '滞纳金',name: 'delayFee'}
 							]}
 						]
@@ -423,7 +440,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 						items: [
 							{ xtype: 'fieldset',title: 'D.商检',items:[
 								{ xtype: 'f-inspection',fieldLabel: '商检行',hiddenName: 'inspection'},
-								{ xtype: 'f-text',fieldLabel: '出口口岸',name: 'loadingPortCopy',readOnly:true},
+								{ xtype: 'f-dict',fieldLabel: '出口口岸',hiddenName: 'loadingPortCopy',width: 84,kind:'port',readOnly:true},
 								{ xtype: 'f-text',fieldLabel: '商检运输方式',name: 'inspectionTransType',value:'汽车'}
 							]},
 							{ xtype: 'fieldset',title: 'E.拖车运输',items:[
@@ -467,11 +484,14 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 								{ xtype: 'f-text',fieldLabel: '存放期',name: 'storagePeriod',value:'三个月'},
 								{ xtype: 'f-text',fieldLabel: '包装及规格',name: 'packageAndModel',value:'纸箱'},
 								{ xtype: 'f-text',fieldLabel: '仓存运输工具',name: 'storageVehicle',value:'汽车'}
+							]},
+							{ xtype: 'fieldset',title: '备注',items:[
+								{ xtype: 'f-textarea',fieldLabel: '备注',name: 'memo'}
 							]}
 							
 						]
 					}]
-				},{xtype : 'f-itemsgrid',id:'importItemsGrid',style : 'padding-top : 20px;',height:200}]
+				},{xtype : 'f-itemsgrid',id:'importItemsGrid',style : 'padding-top : 5px;',height:400}]
 			},
 			buttons : [{
 				text: '保存',
@@ -491,6 +511,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 					Ext.apply(this.ajaxParams,{
 						itemIds : [],
 						names : [],
+						productCodes : [],
 						models : [],
 						prices : [],
 						quantitys : [],
@@ -506,6 +527,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 					grid.store.each(function(record){
 						this.ajaxParams['itemIds'].push(Ext.isString(record.id) ? 0 : record.id);
 						this.ajaxParams['names'].push(record.data['name']);
+						this.ajaxParams['productCodes'].push(record.data['productCode']);
 						this.ajaxParams['models'].push(record.data['model']);
 						this.ajaxParams['prices'].push(record.data['price']);
 						this.ajaxParams['quantitys'].push(record.data['quantity']);
@@ -583,7 +605,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				items : [
 					{ xtype: 'f-importselect',fieldLabel: '已有业务',hiddenName: 'fromImport',id:'importOperatorSelect',toTrade:this.selectedId,allowBlank: false},
 					{ xtype: 'f-text',fieldLabel: '客户',name: 'customerName',id:'copyOperator-customerName',readOnly:true},
-					//{ xtype: 'f-text',fieldLabel: '买方',name: 'buyerName',id:'copyOperator-buyerName',readOnly:true},
+					//{ xtype: 'f-text',fieldLabel: '卖方',name: 'buyerName',id:'copyOperator-buyerName',readOnly:true},
 					{xtype : 'f-text',fieldLabel: '货物描述',name: 'itemDesc',id:'copyOperator-itemDesc',readOnly:true},
 					{xtype : 'f-text',fieldLabel: '货物大概数量',name: 'itemQuantity',id:'copyOperator-itemQuantity',readOnly:true}
 				]

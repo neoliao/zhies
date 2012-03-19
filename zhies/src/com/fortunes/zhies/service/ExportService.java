@@ -11,6 +11,7 @@ import com.fortunes.fjdp.admin.model.User;
 import com.fortunes.fjdp.admin.service.UserService;
 import com.fortunes.zhies.model.Accounts;
 import com.fortunes.zhies.model.BusinessInstance;
+import com.fortunes.zhies.model.Company;
 import com.fortunes.zhies.model.Export;
 import com.fortunes.zhies.model.Item;
 import com.fortunes.zhies.model.Trade.Status;
@@ -31,18 +32,16 @@ public class ExportService extends GenericService<Export> {
 	
 	@Resource private UserService userService;
 	@Resource private BuyerService buyerService;
+	@Resource private CodeSequenceService codeSequenceService;
 	
 	@Override
 	protected DetachedCriteria getConditions(String query,
 			Map<String, String> queryMap) {
 		DetachedCriteria criteria = super.getConditions(query, queryMap);
-		criteria.createAlias("customer", "c");
 		
-
 		if(StringUtils.isNotEmpty(queryMap.get("userId"))){
 			User user = userService.get(queryMap.get("userId"));
-			if(!userService.ownRole(user, "operator") && 
-					(userService.ownRole(user, "sales") || userService.ownRole(user, "operator"))){
+			if(!(userService.ownRole(user, "manager") || userService.ownRole(user, "financials"))){
 				criteria.add(Restrictions.or(
 					Restrictions.eq("sales", user),
 					Restrictions.eq("operator", user)
@@ -50,9 +49,18 @@ public class ExportService extends GenericService<Export> {
 			}
 		}
 		if(StringUtils.isNotEmpty(query)){
+			criteria.createAlias("customer", "c");
+			criteria.createAlias("loadingPort", "p",DetachedCriteria.LEFT_JOIN);
+			
 			criteria.add(Restrictions.or(
-			    Restrictions.ilike("code", query, MatchMode.ANYWHERE),
-			    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+				Restrictions.or(
+				    Restrictions.ilike("itemDesc", query, MatchMode.ANYWHERE),
+				    Restrictions.ilike("p.text", query, MatchMode.ANYWHERE)
+				),
+				Restrictions.or(
+				    Restrictions.ilike("code", query, MatchMode.ANYWHERE),
+				    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+				)
 			));
 		}
 		criteria.addOrder(Order.desc("createDate"));
@@ -64,14 +72,13 @@ public class ExportService extends GenericService<Export> {
 
 	public void createExportInstance(Export export,
 			List<BusinessInstance> busis) throws Exception {
+		export.setCode(nextExportCode(export));
 		add(export);
 		
 		for(BusinessInstance b : busis){
 			b.setTrade(export);
 			this.getHt().save(b);
 		}
-		
-		export.setCode(getExportCode(export));
 		
 	}
 	
@@ -87,10 +94,10 @@ public class ExportService extends GenericService<Export> {
 		
 	}
 	
-	private String getExportCode(Export export){
+	private String nextExportCode(Export export){
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
-		this.getHt().refresh(export);
-		return "I-"+export.getCustomer().getCode()+"-"+format.format(export.getCreateDate())+"-"+export.getId();
+		long v = codeSequenceService.nextExportSequence();
+		return "E-"+format.format(export.getCreateDate())+"-"+v;
 	}
 
 	public void updateOperator(Export export, List<Item> items,long[] deletedItemIds) {
@@ -150,6 +157,7 @@ public class ExportService extends GenericService<Export> {
 		
 		//retail data
 		fromExport.setId(toExport.getId());
+		fromExport.setCode(toExport.getCode());
 		fromExport.setCreateDate(toExport.getCreateDate());
 		fromExport.setFinishDate(toExport.getFinishDate());
 		fromExport.setEndedDate(toExport.getEndedDate());
@@ -166,6 +174,13 @@ public class ExportService extends GenericService<Export> {
 		fromExport.setStatus(Status.OPERATOR_SAVED);
 		this.getHt().merge(fromExport);
 		
+	}
+
+
+
+
+	public Company getMCHCompany() {
+		return (Company)this.getHt().find("from Company c where c.code = ?", "SZMCH").get(0);
 	}
 
 
