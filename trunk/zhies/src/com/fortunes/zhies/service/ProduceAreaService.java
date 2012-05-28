@@ -35,7 +35,6 @@ public class ProduceAreaService extends GenericService<ProduceArea> {
 	protected DetachedCriteria getConditions(String query,
 			Map<String, String> queryMap) {
 		DetachedCriteria criteria = super.getConditions(query, queryMap);
-		criteria.createAlias("customer", "c");
 		
 		if(StringUtils.isNotEmpty(queryMap.get("userId"))){
 			User user = userService.get(queryMap.get("userId"));
@@ -45,6 +44,21 @@ public class ProduceAreaService extends GenericService<ProduceArea> {
 					Restrictions.eq("operator", user)
 				));
 			}
+		}
+		if(StringUtils.isNotEmpty(query)){
+			criteria.createAlias("customer", "c");
+			criteria.createAlias("loadingPort", "p",DetachedCriteria.LEFT_JOIN);
+			
+			criteria.add(Restrictions.or(
+				Restrictions.or(
+				    Restrictions.ilike("itemDesc", query, MatchMode.ANYWHERE),
+				    Restrictions.ilike("p.text", query, MatchMode.ANYWHERE)
+				),
+				Restrictions.or(
+				    Restrictions.ilike("code", query, MatchMode.ANYWHERE),
+				    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+				)
+			));
 		}
 		criteria.addOrder(Order.desc("createDate"));
 		return criteria;

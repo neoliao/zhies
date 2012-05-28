@@ -1,3 +1,15 @@
+var statusRenderer = function(v){
+	var map = {
+		'CREATED' : { t: '新建业务',c:'green'},
+		'ASSIGNED' : { t: '已分配操作员',c:'green'},
+		'OPERATOR_SAVED' : { t: '操作已保存',c:'green'},
+		'OPERATOR_SUBMITED': { t:  '操作已提交',c:'#bbbbbb'},
+		'COST_CONFIRMED' : { t: '应收应付已确认',c:'#bbbbbb'},
+		'FINISHED' :{ t:  '完成',c:'#bbbbbb'}
+	};	 
+	return String.format('<span style="color:{0}">{1}</span>',map[v].c,map[v].t);
+};
+
 Ext.app.sYearMonthSelect = Ext.extend(Ext.form.CompositeField,{
 	initComponent : function(){
     	Ext.apply(this,{
@@ -85,6 +97,24 @@ SalesSelect = Ext.extend(Ext.app.SelectField,{
     }
 });
 Ext.reg('f-sales', SalesSelect);
+
+SalesAsistantSelect = Ext.extend(Ext.app.MultiSelectField, {
+	initComponent : function(){	
+		
+		this.store = new Ext.data.JsonStore({
+		    url: ctx+'/customer/getSalesAsistant',
+			root:'data',
+		    fields: ['id', 'text','checked']			
+		});
+		
+		SalesAsistantSelect.superclass.initComponent.call(this);
+		
+		this.store.on('beforeload',function(store,o){
+			this.store.baseParams['id'] = Ext.getCmp('Customer').saveId;
+		},this);
+	}
+});
+Ext.reg('f-salesAsistant', SalesAsistantSelect);
 
 
 ItemsGrid = Ext.extend(Ext.grid.EditorGridPanel,{

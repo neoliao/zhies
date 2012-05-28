@@ -189,6 +189,9 @@ public class ExportAction extends GenericAction<Export> {
 		Export export = exportService.get(id);
 		export.setStatus(Export.Status.OPERATOR_SAVED);
 		
+		//ADD IN 2012-03-9
+		export.setTradeStatus(pDict("tradeStatus"));
+		
 		//for CustomsBroker 报关
 		export.setBuyerName(p("buyerName"));
 		export.setCustomsBroker(AppHelper.toCustomsBroker(p("customsBroker")));//报关行
@@ -674,6 +677,7 @@ public class ExportAction extends GenericAction<Export> {
 			export.setSales(authedUser);
 		}
 		
+		
 		export.setMemo(p("memo"));
 		export.setOtherPrice(p("otherPrice"));
 		export.setBuyerName(p("buyerName"));
@@ -724,6 +728,9 @@ public class ExportAction extends GenericAction<Export> {
 		record.put("soNo", e.getSoNo());
 		record.put("verificationCompany", e.getVerificationCompany());
 		record.put("verificationFormNo", e.getVerificationFormNo());
+		
+		//ADD IN 2012-03-19
+		record.put("tradeStatus", e.getTradeStatus());
 		
 		record.put("customsBroker", e.getCustomsBroker());
 		record.put("loadingCity", e.getLoadingCity());//出口地

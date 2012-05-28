@@ -14,10 +14,13 @@ Customer = Ext.extend(Ext.app.BaseFuncPanel,{
 					{header: 'QQ',dataIndex:'qq'},
 					{header: '联系人',dataIndex:'linkman'},
 					{header: '联系人电话',dataIndex:'linkmanTel'},
-					{header: '联系人邮件',dataIndex:'linkmanEmail'}
+					{header: '联系人邮件',dataIndex:'linkmanEmail'},
+					{header: '销售代表',dataIndex:'sales',renderer:dictRenderer}
+					
 				]),	
 				storeMapping:[
-					'name','code','address','email','tel','fax','qq','linkman','linkmanTel','linkmanEmail'
+					'name','code','address','email','tel','fax','qq','linkman',
+					'linkmanTel','linkmanEmail','sales','salesAsistants'
 				]
 			},
 			buttonConfig : [
@@ -27,7 +30,7 @@ Customer = Ext.extend(Ext.app.BaseFuncPanel,{
 				}
 			],
 			winConfig : {
-				height: 400
+				height: 480
 			},
 			formConfig:{
 				items: [
@@ -40,7 +43,9 @@ Customer = Ext.extend(Ext.app.BaseFuncPanel,{
 					{xtype: 'f-text',fieldLabel: 'QQ',name: 'qq'},
 					{xtype: 'f-text',fieldLabel: '联系人',name: 'linkman'},
 					{xtype: 'f-text',fieldLabel: '联系人电话',name: 'linkmanTel'},
-					{xtype: 'f-text',fieldLabel: '联系人邮件',name: 'linkmanEmail'}
+					{xtype: 'f-text',fieldLabel: '联系人邮件',name: 'linkmanEmail'},
+					{xtype: 'f-sales',fieldLabel: '销售代表',hiddenName: 'sales'},
+					{xtype: 'f-salesAsistant',fieldLabel: '销售助理',hiddenName: 'salesAsistants'}
  
 				]
 			},

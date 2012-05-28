@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dicts>
 
+	<dict key="tradeStatus" text="当前业务状态">
+		<dict key="01" text="已出单"/>
+		<dict key="02" text="已发货"/>
+		<dict key="03" text="已过关"/>
+	</dict>
+
 	<dict key="port" text="口岸">
 		<dict key="01" text="盐田港"/>
 		<dict key="02" text="蛇口港"/>

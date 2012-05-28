@@ -32,6 +32,7 @@ public class DictAction extends GenericAction<Dict> {
 		if(StringUtils.isEmpty(id))
 			dict.setId(Tools.uuid());
 		dict.setText(p("text"));
+		dict.setOrderNum(pInt("orderNum"));
 		dict.setDescription(p("description"));
 	}
 	
@@ -39,6 +40,7 @@ public class DictAction extends GenericAction<Dict> {
 		AdminHelper record = new AdminHelper();
 		record.put("id", dict.getId());
 		record.put("text", dict.getText());
+		record.put("orderNum", dict.getOrderNum());
 		record.put("description", dict.getDescription());
 		record.put("iconCls", "dict");
 		return record.getJsonObject();

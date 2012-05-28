@@ -36,9 +36,10 @@ StatementsReport = Ext.extend(Ext.app.BaseFuncPanel,{
 			gridConfig:{
 				cm:new Ext.grid.ColumnModel([
 					new Ext.grid.RowNumberer(),
-					//{header: '业务编号',dataIndex:'code'},
+					{header: '业务发生时间',dataIndex:'createDate'},
+					{header: '业务编号',dataIndex:'code'},
 					//{header: '客户',dataIndex:'customer',renderer:dictRenderer},
-					{header: '买方',dataIndex:'buyer',renderer:dictRenderer},
+					//{header: '买方',dataIndex:'buyer',renderer:dictRenderer},
 					{header: '货物描述',dataIndex:'itemDesc'},
 					//{header: '核销单主',dataIndex:'verificationCompany',renderer:dictRenderer},
 					//{header: '核销单号',dataIndex:'verificationFormNo'},

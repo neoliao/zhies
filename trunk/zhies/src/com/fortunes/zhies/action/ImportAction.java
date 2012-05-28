@@ -226,6 +226,11 @@ public class ImportAction extends GenericAction<Import> {
 		imports.setProducerNo(p("producerNo"));//产地证号
 		imports.setPackageNumber(pInt("packageNumber"));//箱数
 		imports.setProduceDate(pDate("produceDate"));//产地日期
+		//ADD in 2012-03-19
+		imports.setPayWire(p("payWire"));
+		imports.setTotalItmesMoney(p("totalItmesMoney"));
+		imports.setVerificationNo(p("verificationNo"));
+		imports.setTradeStatus(pDict("tradeStatus"));
 		
 		//for inspection 商检
 		imports.setInspection(AppHelper.toInspection(p("inspection")));//商检行
@@ -713,6 +718,13 @@ public class ImportAction extends GenericAction<Import> {
 		record.put("producerNo", e.getProducerNo());//产地证号
 		record.put("packageNumber", e.getPackageNumber());//箱数
 		record.put("produceDate", e.getProduceDate());//产地日期
+		
+		//ADD IN 2010-03-19
+		record.put("payWire", e.getPayWire());//是否付汇
+		record.put("totalItmesMoney", e.getTotalItmesMoney());//总货值
+		record.put("verificationNo", e.getVerificationNo());//报关单号
+		
+		record.put("tradeStatus", e.getTradeStatus());
 		
 		//for inspection 商检
 		record.put("inspection", e.getInspection());//商检行

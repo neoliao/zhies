@@ -7,6 +7,10 @@ import net.sf.json.JSONObject;
 import com.fortunes.fjdp.AppHelper;
 import com.fortunes.fjdp.admin.AdminHelper;
 import com.fortunes.fjdp.admin.model.Employee;
+import com.fortunes.fjdp.admin.model.Role;
+import com.fortunes.fjdp.admin.model.User;
+import com.fortunes.fjdp.admin.service.RoleService;
+import com.fortunes.fjdp.admin.service.UserService;
 
 import net.fortunes.core.action.GenericAction;
 import net.fortunes.core.service.GenericService;
@@ -22,6 +26,26 @@ import com.fortunes.zhies.service.CustomerService;
 public class CustomerAction extends GenericAction<Customer> {
 	
 	private CustomerService customerService;
+	private RoleService roleService;
+	private UserService userService;
+	
+	public String getSalesAsistant() throws Exception{
+		Customer customer = customerService.get(getId());
+		
+/*		Role salesRole = getRoleService().getRoleByNameEn("sales");
+		List<User> users = salesRole.getUsers();*/
+		List<User> users = userService.findAll();
+		JSONArray ja = new JSONArray();
+		for(User u:users){
+			JSONObject record = new JSONObject();
+			record.put("id", u.getId());
+			record.put("text", u.getDisplayName());
+			record.put("checked",customer == null ? false : customer.getSalesAsistant().contains(u));
+			ja.add(record);
+		}
+		jo.put("data", ja);
+		return render(jo);
+	}
 	
 	protected void setEntity(Customer e) throws ParseException{
 		e.setName(p("name"));
@@ -34,6 +58,14 @@ public class CustomerAction extends GenericAction<Customer> {
 		e.setLinkman(p("linkman"));
 		e.setLinkmanTel(p("linkmanTel"));
 		e.setLinkmanEmail(p("linkmanEmail"));
+		e.setSales(AppHelper.toUser(p("sales")));
+		
+		e.getSalesAsistant().clear();
+		if(StringUtils.isNotEmpty(p("salesAsistants"))){
+            for(String userId : p("salesAsistants").split(",")){                             
+                e.getSalesAsistant().add(AdminHelper.toUser(userId));
+            }
+		}
 	}
 	
 	protected JSONObject toJsonObject(Customer e) throws ParseException{
@@ -49,11 +81,20 @@ public class CustomerAction extends GenericAction<Customer> {
 		record.put("linkman", e.getLinkman());
 		record.put("linkmanTel", e.getLinkmanTel());
 		record.put("linkmanEmail", e.getLinkmanEmail());
+		
+		record.put("sales", e.getSales());
+		
+		JSONArray ja = new JSONArray();
+        for(User sales : e.getSalesAsistant()){
+            ja.add(new AdminHelper().put("salesAsistant", sales));
+        }
+        record.put("salesAsistants", ja);
 		return record.getJsonObject();
 	}
 	
 	public String getCustomers() throws Exception{
-		List<Customer> list = getDefService().findAll();
+		//List<Customer> list = getDefService().findAll();
+		List<Customer> list = customerService.findMyCustomer(AppHelper.getUser());
 		JSONArray ja = new JSONArray();
 		for(Customer c:list){
 			String namePy = PinYin.toPinYinString(c.getName());
@@ -84,6 +125,22 @@ public class CustomerAction extends GenericAction<Customer> {
 
 	public CustomerService getCustomerService() {
 		return customerService;
+	}
+
+	public void setRoleService(RoleService roleService) {
+		this.roleService = roleService;
+	}
+
+	public RoleService getRoleService() {
+		return roleService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public UserService getUserService() {
+		return userService;
 	}
 
 }
