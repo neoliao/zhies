@@ -120,10 +120,12 @@ public abstract class GenericService<E>{
 	}
 	
 	public List<E> find(String hql, Object... objects) {
+		System.out.println(hql);
 		return this.getHt().find(hql, objects);
 	}
 	
 	public E findUnique(String hql, Object... objects) {
+		System.out.println(hql);
 		List<E> list = find(hql,objects);
 		return  (list != null && list.size() >0) ? list.get(0) : null;
 	}

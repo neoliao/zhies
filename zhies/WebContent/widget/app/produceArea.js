@@ -200,46 +200,57 @@ ProduceArea = Ext.extend(Ext.app.BaseFuncPanel,{
 				text: '确定',
 				scope:this,
 				handler : function(){
-					this.ajaxParams = { id :this.getSelectionModel().getSelected().id };
-		
-					var mustPayGrid = Ext.getCmp('produceArea-mustpay');
-					var mustGainGrid = Ext.getCmp('produceArea-mustgain');
-					mustPayGrid.store.commitChanges();
-					mustGainGrid.store.commitChanges();
-					
-					Ext.apply(this.ajaxParams,{
-						businessInstanceIds : [],
-						companyIds : [],
-						mustPayAmounts : [],
-						mustGainAmounts : []
-					});
-					
-					mustPayGrid.store.each(function(record){
-						this.ajaxParams['businessInstanceIds'].push(record.id);
-						this.ajaxParams['companyIds'].push(record.data.company.id);
-						this.ajaxParams['mustPayAmounts'].push(record.data['amount']);
-					},this);
-					
-					mustGainGrid.store.each(function(record){
-						this.ajaxParams['mustGainAmounts'].push(record.data['amount']);
-					},this);
-					
-					Ext.Ajax.request({
-						url:this.url+'/confirmCost',
-						params: this.ajaxParams,
-						scope:this,
-						success:function(form, action) {
-							confirmWin.close();
-							this.store.reload({
-								scope : this,
-								callback : function(){
-									var sm = this.getSelectionModel();
-									var r = sm.getSelected();
-									this.changeOperateStatus(sm,0,r);
-								}
+					//加入确认动作
+					Ext.Msg.prompt('请仔细核对应收应付明细', '输入大写的YES确认:', function(btn, text){
+					    if (btn == 'ok' && text == 'YES'){
+							this.ajaxParams = { id :this.getSelectionModel().getSelected().id };
+				
+							var mustPayGrid = Ext.getCmp('produceArea-mustpay');
+							var mustGainGrid = Ext.getCmp('produceArea-mustgain');
+							mustPayGrid.store.commitChanges();
+							mustGainGrid.store.commitChanges();
+							
+							Ext.apply(this.ajaxParams,{
+								businessInstanceIds : [],
+								companyIds : [],
+								mustPayAmounts : [],
+								mustGainAmounts : []
 							});
-			            }
-			        });
+							
+							mustPayGrid.store.each(function(record){
+								this.ajaxParams['businessInstanceIds'].push(record.id);
+								this.ajaxParams['companyIds'].push(record.data.company.id);
+								this.ajaxParams['mustPayAmounts'].push(record.data['amount']);
+							},this);
+							
+							mustGainGrid.store.each(function(record){
+								this.ajaxParams['mustGainAmounts'].push(record.data['amount']);
+							},this);
+							
+							Ext.Ajax.request({
+								url:this.url+'/confirmCost',
+								params: this.ajaxParams,
+								scope:this,
+								success:function(form, action) {
+									confirmWin.close();
+									this.store.reload({
+										scope : this,
+										callback : function(){
+											var sm = this.getSelectionModel();
+											var r = sm.getSelected();
+											this.changeOperateStatus(sm,0,r);
+										}
+									});
+					            }
+					        });
+						}else{
+							if(text != 'YES'){
+								App.msg('输入不正确,输入大写的YES确认');
+							}
+						}
+					},this);
+					
+					
 				}
 			}]
 		});

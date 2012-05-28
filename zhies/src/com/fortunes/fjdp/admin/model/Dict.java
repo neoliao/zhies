@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+
 import net.fortunes.core.Model;
 
 @Entity
@@ -22,9 +24,12 @@ public class Dict extends Model {
 	private Dict parent;
 	
 	@OneToMany(mappedBy = "parent")
+	@OrderBy("orderNum")
 	private List<Dict> children = new ArrayList<Dict>();
 	
 	private String description;
+	
+	private Integer orderNum;
 	
     public Dict() {
     }
@@ -91,6 +96,15 @@ public class Dict extends Model {
 
 	public boolean isLeaf() {
 		return leaf;
+	}
+
+
+	public void setOrderNum(Integer orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public Integer getOrderNum() {
+		return orderNum;
 	}
 
 

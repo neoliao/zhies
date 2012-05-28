@@ -52,7 +52,7 @@ public class DictService extends GenericService<Dict> {
 	}
 	
 	public List<Dict> getDictsByType(String key) {
-		return find("from Dict d where d.parent.id = ?", key);
+		return find("from Dict d where d.parent.id = ? order by d.orderNum", key);
 	}
 	
 	

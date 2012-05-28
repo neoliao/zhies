@@ -2,6 +2,8 @@ package com.fortunes.zhies.action;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import net.fortunes.core.ListData;
@@ -58,7 +60,8 @@ public class TradeAction extends GenericAction<Trade> {
 		AppHelper record = new AppHelper();
 		record.put("id", e.getId());
 		record.put("code", e.getCode());
-		record.put("createDate", e.getCreateDate());
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		record.put("createDate", df.format(e.getCreateDate()));
 		record.put("reportPortDate", e.getReportPortDate());
 		record.put("buyerName", e.getBuyerName());
 		record.put("customer", e.getCustomer());
@@ -250,7 +253,7 @@ public class TradeAction extends GenericAction<Trade> {
 		
 		String title = p("year")+"年"+p("month")+"月"+customer.getName()+"对账单";
 		
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 14));
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 15));
 		
 		HSSFCellStyle bigStyle = workbook.createCellStyle();
 		HSSFFont big = workbook.createFont();
@@ -266,7 +269,7 @@ public class TradeAction extends GenericAction<Trade> {
 		int k = 0;
 		HSSFRow titleRow = sheet.createRow(1);
 		//setCell(k++, titleRow, "客户");
-		setCell(k++, titleRow, "买方");
+		setCell(k++, titleRow, "业务发生时间");
 		setCell(k++, titleRow, "货物");
 		setCell(k++, titleRow, "港口");
 		setCell(k++, titleRow, "货柜名称");
@@ -282,15 +285,17 @@ public class TradeAction extends GenericAction<Trade> {
 		setCell(k++, titleRow,  "港建费");
 		setCell(k++, titleRow,  "其它费用");
 		setCell(k++, titleRow,  "总费用");
+		setCell(k++, titleRow, "业务编号");
 
 		int i = 2;
 		double totalMonth = 0.0;
 		for(Trade e : listData.getList()){
 			int j = 0;
 			HSSFRow row = sheet.createRow(i);
-			setCell(j++, row, e.getBuyerName());
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			setCell(j++, row, df.format(e.getCreateDate()));
 			setCell(j++, row, e.getItemDesc());
-			setCell(j++, row, e.getLoadingPort().getText());
+			setCell(j++, row, e.getLoadingPort() == null?"":e.getLoadingPort().getText());
 			setCell(j++, row, e.getCabNo());
 			setCell(j++, row, e.getSoNo());
 			setCell(j++, row, e.getTotalPackage());
@@ -304,6 +309,9 @@ public class TradeAction extends GenericAction<Trade> {
 			setCell(j++, row,  getBussinessPrice("Z",e.getBusinessInstances()));
 			totalMonth += e.getTotalSalesPrice();
 			setCell(j++, row,  e.getTotalSalesPrice());
+			
+			//ADD IN 2012-03-19
+			setCell(j++, row,  e.getCode());
 
 			i++;
 		}

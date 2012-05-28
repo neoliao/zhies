@@ -151,7 +151,7 @@ public class TradeService extends GenericService<Trade> {
 	public List<Trade> getMustGainReminder(User authedUser) {
 		Date today = new Date();
 		String whereHql = "";
-		if(userService.ownRole(authedUser, "manager")){
+		if(userService.ownRole(authedUser, "manager") || userService.ownRole(authedUser, "financials")){
 			whereHql = " ";
 		}else{
 			whereHql = " and t.sales.id = "+authedUser.getId();

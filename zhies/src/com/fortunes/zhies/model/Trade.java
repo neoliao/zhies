@@ -60,7 +60,10 @@ public class Trade extends Model {
 	private User operator;//操作员
 	
 	@Enumerated(EnumType.STRING)
-	private Status status;//业务状态
+	private Status status;//工作流状态
+	
+	@ManyToOne
+	private Dict tradeStatus;//业务状态,由操作人员手工修改
 	
 	@ManyToOne
 	private Customer customer;//客户
@@ -174,6 +177,11 @@ public class Trade extends Model {
 	private AirCompany airCompany;
 	
 	private boolean caluateAsTotalPrice;//以总价来计算单价
+	
+	
+	private String payWire;//'是否付汇
+	private String totalItmesMoney;//'总货值
+	private String verificationNo;//'报关单号
 	
 	private String otherPrice;
 	
@@ -597,6 +605,30 @@ public class Trade extends Model {
 	}
 	public Dict getLoadingPort() {
 		return loadingPort;
+	}
+	public String getPayWire() {
+		return payWire;
+	}
+	public void setPayWire(String payWire) {
+		this.payWire = payWire;
+	}
+	public String getTotalItmesMoney() {
+		return totalItmesMoney;
+	}
+	public void setTotalItmesMoney(String totalItmesMoney) {
+		this.totalItmesMoney = totalItmesMoney;
+	}
+	public String getVerificationNo() {
+		return verificationNo;
+	}
+	public void setVerificationNo(String verificationNo) {
+		this.verificationNo = verificationNo;
+	}
+	public void setTradeStatus(Dict tradeStatus) {
+		this.tradeStatus = tradeStatus;
+	}
+	public Dict getTradeStatus() {
+		return tradeStatus;
 	}
 	
 

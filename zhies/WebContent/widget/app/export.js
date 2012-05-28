@@ -3,17 +3,6 @@
 Export = Ext.extend(Ext.app.BaseFuncPanel,{
 	loadFromGrid : false,
 	initComponent : function(){
-		var statusRenderer = function(v){
-			var map = {
-				'CREATED' : { t: '新建业务',c:'green'},
-				'ASSIGNED' : { t: '已分配操作员',c:'green'},
-				'OPERATOR_SAVED' : { t: '操作已保存',c:'green'},
-				'OPERATOR_SUBMITED': { t:  '操作已提交',c:'red'},
-				'COST_CONFIRMED' : { t: '应收应付已确认',c:'red'},
-				'FINISHED' :{ t:  '完成',c:'red'}
-			};	 
-			return String.format('<span style="color:{0}">{1}</span>',map[v].c,map[v].t);
-		};
 		
 		var checkConfirm = {
 			blur : function(f){
@@ -48,17 +37,18 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 					{header: '口岸',dataIndex:'loadingPort',renderer:dictRenderer},
 					{header: '货物描述',dataIndex:'itemDesc'},
 					{header: '大概数量',dataIndex:'itemQuantity'},
-					{header: '状态',dataIndex:'status',renderer:statusRenderer},
+					{header: '流程状态',dataIndex:'status',renderer:statusRenderer},
+					{header: '业务状态',dataIndex:'tradeStatus',renderer:dictRenderer},
 					{header: '业务员',dataIndex:'sales',renderer:dictRenderer},
 					{header: '操作员',dataIndex:'operator',renderer:dictRenderer}
 				]),	
 				storeMapping:[
 					'reportPortDate','code','createDate','customer','buyer','itemDesc','buyerName','loadingPort',
-					'status','sales','operator','itemQuantity','producerCertificate','memo','otherPrice'
+					'status','sales','operator','itemQuantity','producerCertificate','memo','otherPrice','tradeStatus'
 				]
 			},
 			winConfig : {
-				height: 540,
+				height: 590,
 				width: 800,
 				title : '业务新增或修改',
 				desc : '业务员新增或者修改业务内容',
@@ -127,19 +117,12 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 								{ xtype: 'f-customer',fieldLabel: '客户',hiddenName: 'customer',id:'exportCustomer',allowBlank: false},
 								//{ xtype: 'f-buyer',fieldLabel: '买方',hiddenName: 'buyer',id:'exportBuyer'},
 								{ xtype: 'f-text',fieldLabel: '买方',name: 'buyerName',id:'exportBuyer'},
-								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '出口地',
-								    items: [
-								        {xtype : 'f-text',name: 'loadingCity',value:'深圳',width: 84},
-								        {xtype : 'displayfield',value: '出口口岸:'},
-								        { xtype: 'f-dict',hiddenName: 'loadingPort',width: 84,kind:'port'}
-								    ]
-								},{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '目的地',
-								    items: [
-								        {xtype : 'f-text',name: 'destination',width: 84},
-								        {xtype : 'displayfield',value: '目的港口:'},
-								        { xtype: 'f-text',name: 'destinationPort',width: 84}
-								    ]
-								},
+								
+								{ xtype: 'f-text',fieldLabel: '出口地',name: 'loadingCity',value:'深圳'},
+								{ xtype: 'f-dict',fieldLabel: '出口口岸',hiddenName: 'loadingPort',kind:'port'},
+								{ xtype: 'f-text',fieldLabel: '目的地',name: 'destination'},
+								{ xtype: 'f-text',fieldLabel: '目的港口',name: 'destinationPort'},
+								
 								{ xtype: 'f-dict',fieldLabel: '结算币种',hiddenName: 'currency',kind:'currency'},
 								{ xtype: 'f-date',fieldLabel: '报关日期',name: 'reportPortDate'},
 								{ xtype: 'f-text',fieldLabel: '柜号',name: 'cabNo'},
@@ -374,19 +357,12 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 							{ xtype: 'fieldset',title: 'A.报关',items:[
 								{ xtype: 'f-text',fieldLabel: '买方',name: 'buyerName'},
 								{ xtype: 'f-customsbroker',fieldLabel: '报关行',hiddenName: 'customsBroker'},
-								{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '出口地',
-								    items: [
-								        {xtype : 'f-text',name: 'loadingCity',value:'深圳',width: 84},
-								        {xtype : 'displayfield',value: '出口口岸:'},
-								        {xtype : 'f-dict',hiddenName: 'loadingPort',width: 84,kind:'port'}
-								    ]
-								},{ xtype: 'compositefield',labelWidth: 20,fieldLabel: '目的地',
-								    items: [
-								        {xtype : 'f-text',name: 'destination',width: 84},
-								        {xtype : 'displayfield',value: '目的港口:'},
-								        { xtype: 'f-text',name: 'destinationPort',width: 84}
-								    ]
-								},
+
+								{ xtype: 'f-text',fieldLabel: '出口地',name: 'loadingCity',value:'深圳'},
+								{ xtype: 'f-dict',fieldLabel: '出口口岸',hiddenName: 'loadingPort',kind:'port'},
+								{ xtype: 'f-text',fieldLabel: '目的地',name: 'destination'},
+								{ xtype: 'f-text',fieldLabel: '目的港口',name: 'destinationPort'},
+								
 								{ xtype: 'f-dict',fieldLabel: '结算币种',hiddenName: 'currency',kind:'currency'},
 								{ xtype: 'f-date',fieldLabel: '报关日期',name: 'reportPortDate'},
 								{ xtype: 'f-text',fieldLabel: '柜号',name: 'cabNo'},
@@ -429,6 +405,9 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 					},{
 						columnWidth:.5,layout: 'form',border: false,style : 'padding-left : 20px;',
 						items: [
+							{ xtype: 'fieldset',title: '当前业务状态',items:[
+								{ xtype: 'f-dict',fieldLabel: '当前业务状态',hiddenName: 'tradeStatus',kind:'tradeStatus'}
+							]},
 							{ xtype: 'fieldset',title: 'D.商检',items:[
 								{ xtype: 'f-inspection',fieldLabel: '商检行',hiddenName: 'inspection'},
 								{ xtype: 'f-dict',fieldLabel: '口岸',hiddenName: 'loadingPortCopy',width: 84,kind:'port',readOnly:true},
@@ -723,7 +702,7 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 				height : 500,
 				width : 695,
 				title : '确认应收应付',
-				desc : '总经理确认该笔业务的应收应付款项',
+				desc : '总经理或者财务确认该笔业务的应收应付款项',
 				bigIconClass : 'trade'
 			},
 			formConfig : {
@@ -740,52 +719,55 @@ Export = Ext.extend(Ext.app.BaseFuncPanel,{
 				text: '确定',
 				scope:this,
 				handler : function(){
-					this.ajaxParams = { id :this.getSelectionModel().getSelected().id };
+					//加入确认动作
+					Ext.Msg.prompt('请仔细核对应收应付明细', '输入大写的YES确认:', function(btn, text){
+					    if (btn == 'ok' && text == 'YES'){
+					        this.ajaxParams = { id :this.getSelectionModel().getSelected().id };
 		
-					var mustPayGrid = Ext.getCmp('export-mustpay');
-					var mustGainGrid = Ext.getCmp('export-mustgain');
-					mustPayGrid.store.commitChanges();
-					mustGainGrid.store.commitChanges();
-					
-					Ext.apply(this.ajaxParams,{
-						businessInstanceIds : [],
-						companyIds : [],
-						mustPayAmounts : [],
-						mustGainAmounts : []
-					});
-					
-					mustPayGrid.store.each(function(record){
-						this.ajaxParams['businessInstanceIds'].push(record.id);
-						this.ajaxParams['companyIds'].push(record.data.company.id);
-						this.ajaxParams['mustPayAmounts'].push(record.data['amount']);
-					},this);
-					
-					mustGainGrid.store.each(function(record){
-						this.ajaxParams['mustGainAmounts'].push(record.data['amount']);
-					},this);
-					
-/*					for(var a in this.ajaxParams){
-						if(Ext.isArray(this.ajaxParams[a]) && this.ajaxParams[a].length == 0){
-							delete this.ajaxParams[a];
-						}
-					}*/
-					
-					Ext.Ajax.request({
-						url:this.url+'/confirmCost',
-						params: this.ajaxParams,
-						scope:this,
-						success:function(form, action) {
-							confirmWin.close();
-							this.store.reload({
-								scope : this,
-								callback : function(){
-									var sm = this.getSelectionModel();
-									var r = sm.getSelected();
-									this.changeOperateStatus(sm,0,r);
-								}
+							var mustPayGrid = Ext.getCmp('export-mustpay');
+							var mustGainGrid = Ext.getCmp('export-mustgain');
+							mustPayGrid.store.commitChanges();
+							mustGainGrid.store.commitChanges();
+							
+							Ext.apply(this.ajaxParams,{
+								businessInstanceIds : [],
+								companyIds : [],
+								mustPayAmounts : [],
+								mustGainAmounts : []
 							});
-			            }
-			        });
+							
+							mustPayGrid.store.each(function(record){
+								this.ajaxParams['businessInstanceIds'].push(record.id);
+								this.ajaxParams['companyIds'].push(record.data.company.id);
+								this.ajaxParams['mustPayAmounts'].push(record.data['amount']);
+							},this);
+							
+							mustGainGrid.store.each(function(record){
+								this.ajaxParams['mustGainAmounts'].push(record.data['amount']);
+							},this);
+							
+							Ext.Ajax.request({
+								url:this.url+'/confirmCost',
+								params: this.ajaxParams,
+								scope:this,
+								success:function(form, action) {
+									confirmWin.close();
+									this.store.reload({
+										scope : this,
+										callback : function(){
+											var sm = this.getSelectionModel();
+											var r = sm.getSelected();
+											this.changeOperateStatus(sm,0,r);
+										}
+									});
+					            }
+					        });
+						}else{
+							if(text != 'YES'){
+								App.msg('输入不正确,输入大写的YES确认');
+							}
+						}
+					},this);
 				}
 			}]
 		});
