@@ -276,9 +276,9 @@ public class TradeAction extends GenericAction<Trade> {
 		setCell(k++, titleRow, "SO号码");
 		setCell(k++, titleRow, "箱数");
 
-		setCell(k++, titleRow,  "报关服务费");
-		setCell(k++, titleRow,  "单证制作费");
-		setCell(k++, titleRow,  "产地证制作费");
+		setCell(k++, titleRow,  "报关费");
+		setCell(k++, titleRow,  "报关单证费");
+		setCell(k++, titleRow,  "产地证");
 		setCell(k++, titleRow,  "商检费");
 		setCell(k++, titleRow,  "拖车运输费");
 		setCell(k++, titleRow,  "国际运输费");

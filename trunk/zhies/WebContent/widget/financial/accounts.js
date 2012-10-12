@@ -28,10 +28,18 @@ MustGain = Ext.extend(Ext.app.BaseFuncPanel,{
 				scope: this,
 				iconCls : 'tick',
 				handler : this.markAsGainedOrPayed
-			},'->',{
+			},'->',
+				
+			{
 				xtype : 'f-search',
 				emptyText : '请输入公司名称'
-			}],
+			}
+			
+			/*'请选择公司',
+			{ xtype: 'f-customer',id: 'accounts-customer',fieldLabel: '公司',hiddenName: 'customer'}*/
+			
+			
+			],
 			winConfig : {
 				height: 330
 			},
@@ -44,6 +52,12 @@ MustGain = Ext.extend(Ext.app.BaseFuncPanel,{
 		this.store.on('load',function(store,records,options){
 			this.getSelectionModel().clearSelections();
 		},this); 
+		
+/*		Ext.getCmp('accounts-customer').on('change',function(field,newValue,oldValue){
+			this.store.reload({
+				params:{ customerId : newValue }	
+			});
+		},this);*/
 	},
 	markAsGainedOrPayed : function(){
 		var records = this.getSelectionModel().getSelections();

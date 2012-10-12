@@ -103,7 +103,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 					handler : this.viewTrade
 				},'->',{
 					xtype : 'f-search',
-					emptyText : '业务编号,客户名称,货物描述,口岸...'
+					emptyText : '业务编号,客户名称,货物描述,口岸,操作员，销售...'
 				}
 			],
 			formConfig:{
@@ -323,7 +323,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
-			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials') || record.data.sales.text == loginUser.userName){
 				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
@@ -336,7 +336,7 @@ Import = Ext.extend(Ext.app.BaseFuncPanel,{
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
 			}
-			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials') || record.data.sales.text == loginUser.userName){
 				Ext.getCmp('import_file-Bt').show();
 				Ext.getCmp('viewTrade-Bt').show();
 				Ext.getCmp('viewOperator-Bt').show();
