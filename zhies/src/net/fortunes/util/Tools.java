@@ -85,7 +85,7 @@ public class Tools {
 	public static Date getFirstDate(String monthTag){
 		try {
 			DateFormat df = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
-			return df.parse(monthTag+"-01 00:00:00");
+			return df.parse(monthTag+"-01 00:00:01");
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return null;
@@ -96,11 +96,11 @@ public class Tools {
 	public static Date getLastDate(String monthTag){
 		try {
 			DateFormat df = new SimpleDateFormat("yyyy-M-dd HH:mm:ss");
-			Date firstDate = df.parse(monthTag+"-01  00:00:00");
+			Date firstDate = df.parse(monthTag+"-01  00:00:01");
 			Calendar cal = new GregorianCalendar();
 			cal.setTime(firstDate);
 			int lastDateInt = cal.getActualMaximum(Calendar.DATE);
-			Date lastDate = df.parse(monthTag+"-"+lastDateInt+" 00:00:00");
+			Date lastDate = df.parse(monthTag+"-"+lastDateInt+" 23:59:59");
 			return lastDate;
 		} catch (ParseException e) {
 			e.printStackTrace();

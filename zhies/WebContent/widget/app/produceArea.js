@@ -60,7 +60,7 @@ ProduceArea = Ext.extend(Ext.app.BaseFuncPanel,{
 					handler : this.viewTrade
 				},'->',{
 					xtype : 'f-search',
-					emptyText : '请输入业务编号或者客户名称'
+					emptyText : '业务编号,客户名称,操作员，销售...'
 				}
 			],
 			winConfig : {
@@ -134,7 +134,7 @@ ProduceArea = Ext.extend(Ext.app.BaseFuncPanel,{
 			if(record.data.operator.text == loginUser.userName){
 				Ext.getCmp('produceArea-viewTrade-Bt').show();
 			}
-			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials') || record.data.sales.text == loginUser.userName){
 				Ext.getCmp('produceArea-viewTrade-Bt').show();
 			}
 		}
@@ -143,7 +143,7 @@ ProduceArea = Ext.extend(Ext.app.BaseFuncPanel,{
 			if(record.data.operator.text == loginUser.userName){
 				Ext.getCmp('produceArea-viewTrade-Bt').show();
 			}
-			if(loginUser.ownRole('manager') || loginUser.ownRole('financials')){
+			if(loginUser.ownRole('manager') || loginUser.ownRole('financials') || record.data.sales.text == loginUser.userName){
 				Ext.getCmp('produceArea-viewTrade-Bt').show();
 			}
 		}

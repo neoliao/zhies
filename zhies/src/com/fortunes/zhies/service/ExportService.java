@@ -51,23 +51,30 @@ public class ExportService extends GenericService<Export> {
 		if(StringUtils.isNotEmpty(query)){
 			criteria.createAlias("customer", "c");
 			criteria.createAlias("loadingPort", "p",DetachedCriteria.LEFT_JOIN);
+			criteria.createAlias("sales", "s",DetachedCriteria.LEFT_JOIN);
+			criteria.createAlias("operator", "o",DetachedCriteria.LEFT_JOIN);
 			
 			criteria.add(Restrictions.or(
 				Restrictions.or(
-				    Restrictions.ilike("itemDesc", query, MatchMode.ANYWHERE),
-				    Restrictions.ilike("p.text", query, MatchMode.ANYWHERE)
+					Restrictions.or(
+							Restrictions.ilike("code", query, MatchMode.ANYWHERE),
+						    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+					),
+					Restrictions.or(
+					    Restrictions.ilike("itemDesc", query, MatchMode.ANYWHERE),
+					    Restrictions.ilike("p.text", query, MatchMode.ANYWHERE)
+					)
 				),
 				Restrictions.or(
-				    Restrictions.ilike("code", query, MatchMode.ANYWHERE),
-				    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+					    Restrictions.ilike("s.displayName", query, MatchMode.ANYWHERE),
+					    Restrictions.ilike("o.displayName", query, MatchMode.ANYWHERE)
 				)
 			));
+			
 		}
 		criteria.addOrder(Order.desc("createDate"));
 		return criteria;
 	}
-
-	
 	
 
 	public void createExportInstance(Export export,
@@ -114,6 +121,14 @@ public class ExportService extends GenericService<Export> {
 	}
 
 	public void confirmCost(Export export, List<Accounts> accountsList) {
+		//判断应收应付是否已经确认，避免出现重复数据
+		List<Accounts> ac = this.getHt().find("select a from Accounts a where a.trade.id = ?",export.getId());
+		
+		if(ac != null && ac.size() > 0){
+			return;
+		}
+		
+		
 		List<BusinessInstance> busiList = export.getBusinessInstances();
 		double totalSalesPrice = 0.0;
 		double totalCost = 0.0;

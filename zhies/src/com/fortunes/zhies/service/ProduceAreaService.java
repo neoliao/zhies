@@ -48,15 +48,23 @@ public class ProduceAreaService extends GenericService<ProduceArea> {
 		if(StringUtils.isNotEmpty(query)){
 			criteria.createAlias("customer", "c");
 			criteria.createAlias("loadingPort", "p",DetachedCriteria.LEFT_JOIN);
+			criteria.createAlias("sales", "s",DetachedCriteria.LEFT_JOIN);
+			criteria.createAlias("operator", "o",DetachedCriteria.LEFT_JOIN);
 			
 			criteria.add(Restrictions.or(
 				Restrictions.or(
-				    Restrictions.ilike("itemDesc", query, MatchMode.ANYWHERE),
-				    Restrictions.ilike("p.text", query, MatchMode.ANYWHERE)
+					Restrictions.or(
+							Restrictions.ilike("code", query, MatchMode.ANYWHERE),
+						    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+					),
+					Restrictions.or(
+					    Restrictions.ilike("itemDesc", query, MatchMode.ANYWHERE),
+					    Restrictions.ilike("p.text", query, MatchMode.ANYWHERE)
+					)
 				),
 				Restrictions.or(
-				    Restrictions.ilike("code", query, MatchMode.ANYWHERE),
-				    Restrictions.ilike("c.name", query, MatchMode.ANYWHERE)
+					    Restrictions.ilike("s.displayName", query, MatchMode.ANYWHERE),
+					    Restrictions.ilike("o.displayName", query, MatchMode.ANYWHERE)
 				)
 			));
 		}

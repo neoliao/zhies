@@ -30,11 +30,13 @@ public class AccountsAction extends GenericAction<Accounts> {
 	
 	public String mustPay() throws Exception{
 		queryMap.put("type", AccountsType.MUST_PAY.name());
+		queryMap.put("customerId", p("customerId"));
 		return super.list();
 	}
 	
 	public String mustGain() throws Exception{
 		queryMap.put("type", AccountsType.MUST_GAIN.name());
+		queryMap.put("customerId", p("customerId"));
 		return super.list();
 	}
 	

@@ -34,12 +34,22 @@ public class AccountsService extends GenericService<Accounts> {
 		DetachedCriteria criteria = super.getConditions(query, queryMap);
 		criteria.createAlias("company", "c");
 		criteria.createAlias("trade", "t");
+		
 		String type = queryMap.get("type");
 		if(StringUtils.isNotEmpty(type)){
 			criteria.add(
 				Restrictions.eq("accountsType", AccountsType.valueOf(type))
 			);
 		}
+		
+		String customerId = queryMap.get("customerId");
+		if(StringUtils.isNotEmpty(customerId)){
+			criteria.add(
+				Restrictions.eq("c.id", Long.parseLong(customerId))
+			);
+		}
+		
+		
 		if(StringUtils.isNotEmpty(query)){
 			criteria.add( Restrictions.ilike("c.name", query, MatchMode.ANYWHERE));
 		}
